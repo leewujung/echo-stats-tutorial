@@ -1,5 +1,7 @@
 % 2017 01 01  Echo pdf of 100 Rayleigh scatterers observed using different
 %             beamwidth
+% 2017 04 12  Update figure legend, axis labels, and curve style
+
 
 addpath '~/Dropbox/0_CODE'/MATLAB/saveSameSize/
 
@@ -76,7 +78,7 @@ end
 fig = figure;
 xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
-loglog(xr,rayl,'k','linewidth',1);
+loglog(xr,rayl,'k','linewidth',2);
 hold on
 
 for iD=1:length(deg)
@@ -86,17 +88,27 @@ for iD=1:length(deg)
     E = load(fullfile(save_path,simu_file));
     %[x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),npt);
     [p_x,x] = findEchoDist_kde(E.env/sqrt(mean(E.env.^2)),npt);
-    loglog(x,p_x,'-','linewidth',1);
-    
+    switch iD
+        case 1
+            loglog(x,p_x,'r-','linewidth',2);   
+        case 2
+            loglog(x,p_x,'g-','linewidth',2);   
+        case 3
+            loglog(x,p_x,'b-','linewidth',2);   
+        case 4
+            loglog(x,p_x,'b-','linewidth',1);   
+    end
+    clear E
 end
-xlabel('Normalized echo amplitude','fontsize',16);
-ylabel('PDF','fontsize',16);
-title(sprintf('N=%d, smplN=%s',...
-    N,pingnum_str),...
-    'fontsize',18);
+% title(sprintf('N=%d, smplN=%s',...
+%     N,pingnum_str),...
+%     'fontsize',18);
 ll = legend('Rayleigh','1^o','3^o','10^o','20^o');
 set(ll,'fontsize',18);
-set(gca,'fontsize',14)
+text(3e-3,3e2,'100 Rayleigh scatterers','fontsize',24);
+set(gca,'fontsize',16)
+xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
+ylabel('$p_e(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
 xlim([1e-3 1e2]);
 ylim([1e-6 1e3]);
 
