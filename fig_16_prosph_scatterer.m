@@ -27,7 +27,7 @@ ka = X.ka_3deg;
 % ka = 2*pi;
 sph_rot_opt = '2D';
 
-pingnum_str = '1e5';
+pingnum_str = '1e7';
 pingnum = eval(pingnum_str);
 
 npt = 200;  % number of points for pe kde estimation
@@ -46,7 +46,7 @@ v_rayl = 1/sqrt(2);
 % end
 
 
-if 1
+if 0
 
 for iN=1:length(N_all)
     Ns = N_all(iN);
@@ -54,7 +54,7 @@ for iN=1:length(N_all)
     param.N = Ns;
     param.ka = ka;
     
-    for iP = 1:pingnum
+    parfor iP = 1:pingnum
         phase = unifrnd(0,2*pi,Ns,1);
         
         cc = 1;
@@ -64,7 +64,7 @@ for iN=1:length(N_all)
             theta_sph = unifrnd(0,2*pi,Ns,1);  % before 2017/04, 
         elseif strcmp(sph_rot_opt,'3D')  % theta_sph follow sin(theta_sph) in 3D spherical coord
             u = unifrnd(0,1,Ns,1);
-            theta_sph = acos(u);
+            theta_sph = pi/2-acos(u);  % theta_sph calculated from normal incidence
         end
         fss = cc/2.*sin(atan(b1./(cc.*tan(theta_sph)))).^2./cos(theta_sph).^2;
         roughness = raylrnd(ones(Ns,1)*1/sqrt(2));
@@ -106,7 +106,6 @@ end
 
 
 % Plot: PDF NO BEAMPATTERN
-
 fig = figure;
 xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
