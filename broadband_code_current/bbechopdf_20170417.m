@@ -1,40 +1,7 @@
-% 2011 11 22  simulate N Rayleigh-distributed scatterers
-%             randomly located within a short window
-%             this window corresponds to twice the width
-%             of the widest beampattern ir
-% 2012 02 14  make the frame length exact
-%             sample at the middle of the frame
-% 2012 02 16  test the effect of tapering (system response, etc.)
-% 2012 02 23  update the bpir to the ones using the correct radius
-% 2012 04 18  incorporte system response
-% 2012 05 08  keep on workin to incorporate system response
-% 2012 05 11  incorporate the use of the actual tx signal
-% 2012 10 26  need to save the time series for noise addition
-%             move tx signal generation and windowing to separate functions
-% 2012 11 10  extend this code to do mixed assemblages
-% 2013 07 27  use the decimated transmit signal from the updated 'chirp_w_sys'
-% 2013 07 29  do all calculation in the freq domain so that it's easier
-%             to incorporate both the beampattern and fish scattering response
-% 2013 08 02  further modification to make fish len distr adjustable
-% 2013 08 06  make fish location in the beam adjustable
-% 2013 08 07  try narrowband fish response
-%             revise input
-% 2014 09 04  change the prolate spheroid part so that can
-%             constrain the angle of orientation distribution
-%             instead of always use all angles of orientation
-% 2014 11 24  change so that the prolate spheroid option can
-%             compute [0,2*pi] uniform distribution 
-% 2017 04 17  Update for using flexible beampattern response
-%
-% NEED TO CHANGE: CHANGE THE VARARGIN PART INTO STRUCT TO ACCEPT
-% MORE FLEXIBLE INPUTS AND CLEARER CODE
-
-                                                                     
 function bbechopdf_20170417(N,mix_r,num_sample,param)
-% function bbechopdf_20170417(N,mix_r,num_sample,gate_len,tx,save_folder,save_fname,bpa,indiv,varargin)
 % INPUT
 %   N                       number of scatterers in the gate
-%                          an array if mixed assemblage
+%                           an array if mixed assemblage
 %   mix_r                   ratio between the components in mixed assemblages
 %                           length(mix_r)=1 if simple aggregation, an array if mixed assemblage
 %   num_sample              total number of realizations
@@ -46,12 +13,12 @@ function bbechopdf_20170417(N,mix_r,num_sample,param)
 %                           1-full Gaussian taper
 %                           2-HF Hann taper
 %                           3-LF Hann taper
-%   param.save_folder       folder to save the results
+%   param.save_path         folder to save the results
 %   param.save_file         description of the simulation condition
 %   param.bpa               restricted angle in the beam
 %                           [] - entire half space
 %                           bpa - only within bpa [deg]
-%   param.nb_freq           specified freq for narrowband fish response
+%   param.scattere.nbwb     use narrowband (nb) or broadband (wb) scatterer response
 %   param.scatterer.type    distribution for individual scatterer
 %                           choices: rayl, point, rayl, prosph, fish
 %   param.scatterer.ar
@@ -61,6 +28,16 @@ function bbechopdf_20170417(N,mix_r,num_sample,param)
 %   param.scatterer.angle_mean
 %   param.scatterer.angle_std
 %   param.scatterer.angle_unit 
+%
+% Wu-Jung Lee | leewujung@gmail.com
+% 
+% 2017 04 17  Overhaul old bbechopdf function to use struct as input
+%
+% STILL NEED WORK:
+%   -- prolate spheroid option
+%   -- get_tx function, now generate an octave bandwidth chirp centered at
+%      50 kHz
+%   -- restrained beampattern angle: variable 'bpa'
 
 
 %% Display N and mix_r
@@ -81,33 +58,48 @@ param.num_sample = num_sample;
 
 
 %% Transmit signal/replica
-% param.tx_opt
-% param.tx_taper_opt
+% One octave band centered at 50 kHz
+fctr = 50e3;
+fd = 2^(1/2);
+fup = fctr*fd;
+flo = fctr/fd;
 
-[y,t_y] = gen_tx(param.tx_opt);
-if isfield(param,'tx_taper')  % tapering
-    win = win_chirp(param.tx_taper,y);
-    y = y.*win;
-end
+% Generate signal
+t_y = 0:2.5e-6:0.01;    % pulse length [sec]
+y = chirp(t_y,flo,0.01,fup);   % start/end freq [Hz]
 
 y_fft = fft(y);
 freq_y = 1/diff(t_y(1:2))/(length(y_fft)-1)*((1:(length(y_fft)+1)/2)-1);
 yL = length(y);
 % yHalfL = round((yL+1)/2);
 yHalfL = floor((yL+1)/2);
-dt = 1/(2*freq_y(end));  % time step for the whole simulation
+dt = 1/(2*freq_y(end));
+
+% [y,t_y] = gen_tx(param.tx_opt);
+% if isfield(param,'tx_taper')  % tapering
+%     win = win_chirp(param.tx_taper,y);
+%     y = y.*win;
+% end
+
+% y_fft = fft(y);
+% freq_y = 1/diff(t_y(1:2))/(length(y_fft)-1)*((1:(length(y_fft)+1)/2)-1);
+% yL = length(y);
+% % yHalfL = round((yL+1)/2);
+% yHalfL = floor((yL+1)/2);
+% dt = 1/(2*freq_y(end));  % time step for the whole simulation
+
 % autocorrelation
 Rss = conj(y_fft).*y_fft;
 Rss = Rss(1:length(freq_y)).';
 
 
 %% Beampattern response
-BP = load(fullfile(param.bp_folder,param.bp_file));
+BP = load(fullfile(param.bp_path,param.bp_file));
 BP.bp_y = interp1(BP.freq_bp,BP.bp,freq_y);
 
 
 %% Fish scattering model
-FISH_MODEL = load(fullfile(param.fish_folder,param.fish_file));
+FISH_MODEL = load(fullfile(param.fish_path,param.fish_file));
 FISH_MODEL.fbs_y = interp1(FISH_MODEL.freq_fish,FISH_MODEL.fbs_len_angle,freq_y);
 FISH_MODEL.fbs_y(isnan(FISH_MODEL.fbs_y)) = 0;
 
@@ -125,7 +117,7 @@ end
 
 if strcmp(param.scatterer.type,'fish')
     if ~isfield(param.scatterer,'len_bin')
-        fishL = load(fullfile(param.fish_len_folder,param.fish_len_file));
+        fishL = load(fullfile(param.fish_len_path,param.fish_len_file));
         param.scatterer.len_bin = fishL.L_bin;
         param.scatterer.len_dist = fishL.L_dist;
         param.scatterer.len_unit = 'm';
@@ -206,6 +198,7 @@ parfor iS=1:num_sample  % realization loop
         case 'prosph'  % Prolate spheroid    % =======NOT FINISHED========
             % Prolate spheroid high-freq asymptotic solution
             phase = unifrnd(0,2*pi,N,1);
+            
             cc = 1;
             e_ac = 1/10;
             b1 = cc*e_ac; % length of semi-minor axis
@@ -216,6 +209,7 @@ parfor iS=1:num_sample  % realization loop
                 theta_sph = pi/2-acos(u);  % theta_sph calculated from normal incidence
             end
             fss = cc/2.*sin(atan(b1./(cc.*tan(theta_sph)))).^2./cos(theta_sph).^2;
+            
             roughness = raylrnd(ones(N,1)*1/sqrt(2));
             amp = fss.*roughness;            
             s = amp.*exp(1i*phase);
@@ -278,11 +272,10 @@ toc
 
 
 %% Save file
-if ~isempty(save_folder)
+if ~isempty(param.save_path)
     disp('saving file...');
-    sfname = [save_fname,'_',nn,rr,...
+    sfname = [param.save_file,'_',nn,rr,...
               'sampleN',num2str(num_sample),...
-              '_gateLen',num2str(gate_len),'_freqDepBP.mat'];
-    save([save_folder,'/',sfname],'param','s');
-    %save([sdir,'/',sfname],'param');
+              '_gateLen',num2str(param.gate_len),'_freqDepBP.mat'];
+    save([param.save_path,'/',sfname],'param','s');
 end
