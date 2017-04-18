@@ -6,7 +6,7 @@
 % 2017 04 17  Beampattern response in frequency domain for 3 deg beam
 %             use ka=44.2511 from 'fig_12_pb_ka_ka_num.mat'
 
-base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+base_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
@@ -19,7 +19,7 @@ end
 % Calculation
 fmax = 1.5e6;  % [Hz]
 df = 100;  % [Hz]
-dtheta = 0.01;
+dtheta = 0.001;
 theta = (0:dtheta:1)*pi/2;
 % a = 0.054;  % ka used in thesis--AirMarLow
 a= 0.21128; % ka for 3 deg beam at 50kHz

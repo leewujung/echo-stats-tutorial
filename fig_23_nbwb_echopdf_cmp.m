@@ -6,12 +6,12 @@ clear
 addpath ~/code/echo_stat_tutorial/broadband_code_current/
 
 % Set params
-N = [25,250];
+N = [25];
 mix_r = [1,1];
 num_sample_str = '1e3';
 num_sample = eval(num_sample_str);
 
-save_base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+save_base_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/';
 [~,script_name,~] = fileparts(mfilename('fullpath'));
 save_path = fullfile(save_base_path,script_name);
 if ~exist(save_path,'dir')
@@ -20,12 +20,13 @@ end
 save_file_pre = 'rayleigh';
 
 param.scatterer.type = 'rayl';
-param.scatterer.nbwb = 'wb';
+param.nbwb = 'nb';
 
 param.c = 1500;
 param.gate_len = 0.5;
-param.bp_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/make_bpf_pool_20170417/';
-param.bp_file = 'bpf_a0.211m_dtheta0.010pi_fmax1500kHz_df100Hz.mat';
+param.bp_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/make_bpf_pool_20170417/';
+% param.bp_file = 'bpf_a0.211m_dtheta0.010pi_fmax1500kHz_df100Hz.mat';
+param.bp_file = 'bpf_a0.211m_dtheta0.001pi_fmax1500kHz_df100Hz.mat';
 param.fish_path = '~/code/echo_stat_tutorial/broadband_code_current/fish_info/';
 param.fish_file = 'fish_scat_response_angle-90to90deg_len19to29cm.mat';
 param.fish_len_path = '~/code/echo_stat_tutorial/broadband_code_current/fish_info/';
@@ -35,15 +36,20 @@ param.fish_len_file = 'fish_len_dist.mat';
 for iN=1:length(N)
     [s, param] = bbechopdf_20170417(N(iN),mix_r,num_sample,param);
     
-    sfname = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_freqDepBP.mat',...
-        save_file_pre,N(iN),mix_r(iN),num_sample_str,param.gate_len);
+    if strcmp(param.nbwb,'wb')
+        sfname = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_wb.mat',...
+            save_file_pre,N(iN),mix_r(iN),num_sample_str,param.gate_len);
+    elseif strcmp(param.nbwb,'nb')
+        sfname = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_nb.mat',...
+            save_file_pre,N(iN),mix_r(iN),num_sample_str,param.gate_len);
+    end
     save([save_path,'/',sfname],'param','s');
 
 end
 
 
 % Plot
-npt = 200;
+npt = 80;
 for iN=1:length(N)
     fig = figure;
     xr = logspace(-3,log10(2000),500);
@@ -51,17 +57,25 @@ for iN=1:length(N)
     loglog(xr,rayl,'k','linewidth',2);
     hold on
     
+    % Load narrowband file
+    simu_file = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_nb.mat',...
+        'rayleigh',N(iN),1,num_sample_str,param.gate_len);
+    E = load(fullfile(save_path,simu_file));
+    [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
+    loglog(x,p_x,'b-','linewidth',2);
+
     % Load broadband file
-    simu_file = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_freqDepBP.mat',...
+    simu_file = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_wb.mat',...
         'rayleigh',N(iN),1,num_sample_str,param.gate_len);
     E = load(fullfile(save_path,simu_file));
     [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
     loglog(x,p_x,'r-','linewidth',2);
-    
+
+    % misc
     title(sprintf('N=%d, a=0.211m, smplN=%s',N(iN),num_sample_str),...
         'fontsize',18);
-
-    ll = legend('Rayleigh','Broadband',...
+    
+    ll = legend('Rayleigh','Narrowband','Broadband',...
         'location','southwest');
     set(ll,'fontsize',18);
     set(gca,'fontsize',16)
@@ -69,6 +83,6 @@ for iN=1:length(N)
     ylabel('$p_e(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
     xlim([1e-3 1e2]);
     ylim([1e-6 1e3]);
-
+    
 end
 

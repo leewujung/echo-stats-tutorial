@@ -16,7 +16,7 @@ function [s,param] = bbechopdf_20170417(N,mix_r,num_sample,param)
 %   param.bpa               restricted angle in the beam
 %                           [] - entire half space
 %                           bpa - only within bpa [deg]
-%   param.scattere.nbwb     use narrowband (nb) or broadband (wb) scatterer response
+%   param.nbwb              use narrowband (nb) or broadband (wb) beampatern and scatterer response
 %   param.scatterer.type    distribution for individual scatterer
 %                           choices: rayl, point, rayl, prosph, fish
 %   param.scatterer.ar
@@ -55,52 +55,6 @@ param.mix_r = mix_r;
 param.num_sample = num_sample;
 
 
-%% Transmit signal/replica
-% One octave band centered at 50 kHz
-fctr = 50e3;
-fd = 2^(1/2);
-fup = fctr*fd;
-flo = fctr/fd;
-
-% Generate signal
-t_y = 0:2.5e-6:0.01;    % pulse length [sec]
-y = chirp(t_y,flo,0.01,fup);   % start/end freq [Hz]
-
-y_fft = fft(y);
-freq_y = 1/diff(t_y(1:2))/(length(y_fft)-1)*((1:(length(y_fft)+1)/2)-1);
-yL = length(y);
-% yHalfL = round((yL+1)/2);
-yHalfL = floor((yL+1)/2);
-dt = 1/(2*freq_y(end));
-
-% [y,t_y] = gen_tx(param.tx_opt);
-% if isfield(param,'tx_taper')  % tapering
-%     win = win_chirp(param.tx_taper,y);
-%     y = y.*win;
-% end
-
-% y_fft = fft(y);
-% freq_y = 1/diff(t_y(1:2))/(length(y_fft)-1)*((1:(length(y_fft)+1)/2)-1);
-% yL = length(y);
-% % yHalfL = round((yL+1)/2);
-% yHalfL = floor((yL+1)/2);
-% dt = 1/(2*freq_y(end));  % time step for the whole simulation
-
-% autocorrelation
-Rss = conj(y_fft).*y_fft;
-Rss = Rss(1:length(freq_y)).';
-
-
-%% Beampattern response
-BP = load(fullfile(param.bp_path,param.bp_file));
-BP.bp_y = interp1(BP.freq_bp,BP.bp,freq_y);
-
-
-%% Fish scattering model
-FISH_MODEL = load(fullfile(param.fish_path,param.fish_file));
-FISH_MODEL.fbs_y = interp1(FISH_MODEL.freq_fish,FISH_MODEL.fbs_len_angle,freq_y);
-FISH_MODEL.fbs_y(isnan(FISH_MODEL.fbs_y)) = 0;
-
 
 %% Determine individual scatterer
 % Assign default values
@@ -125,13 +79,78 @@ if strcmp(param.scatterer.type,'fish')
         param.scatterer.angle_std = 10;
         param.scatterer.angle_unit  = 'deg';
     end
-    if strcmp(param.scatterer.nbwb,'nb') && ~isfield(param.scatterer,'nb_freq')
-        param.scatterer.nb_freq = 50e3;
-    end
 end
 
 if ~isfield(param,'bpa')
     param.bpa = [];
+end
+
+if ~isfield(param,'nb_freq')
+    param.nb_freq = 50e3;  % dummy for parfor even if in 'wb' mode
+end
+
+
+
+%% Transmit signal/replica
+% One octave band centered at 50 kHz
+fctr = 50e3;
+fd = 2^(1/2);
+fup = fctr*fd;
+flo = fctr/fd;
+
+% Generate signal
+if strcmp(param.nbwb,'wb')
+    t_y = 0:2.5e-6:0.01;    % pulse length [sec]
+    y = chirp(t_y,flo,0.01,fup);   % start/end freq [Hz]    
+    y_fft = fft(y);
+    freq_y = 1/diff(t_y(1:2))/(length(y_fft)-1)*((1:(length(y_fft)+1)/2)-1);
+    dt = 1/(2*freq_y(end));
+    yL = length(y);
+    % autocorrelation
+    Rss = conj(y_fft).*y_fft;
+    Rss = Rss(1:length(freq_y)).';
+%     [~,nb_idx] = min(abs(freq_y-param.nb_freq));
+
+elseif strcmp(param.nbwb,'nb')
+    dt = 2.5e-6;
+    freq_y = param.nb_freq;  % dummy for parfor
+    yL = round(2*param.gate_len/param.c/dt); % > 2x gateLdist to ensure overlapping
+    t_y = (0:yL-1)*dt;
+    y = sin(2*pi*param.nb_freq*t_y);
+    Rss= [];  % dummy for parfor
+end
+
+yHalfL = floor((yL+1)/2);
+
+% [y,t_y] = gen_tx(param.tx_opt);
+% if isfield(param,'tx_taper')  % tapering
+%     win = win_chirp(param.tx_taper,y);
+%     y = y.*win;
+% end
+
+% y_fft = fft(y);
+% freq_y = 1/diff(t_y(1:2))/(length(y_fft)-1)*((1:(length(y_fft)+1)/2)-1);
+% yL = length(y);
+% % yHalfL = round((yL+1)/2);
+% yHalfL = floor((yL+1)/2);
+% dt = 1/(2*freq_y(end));  % time step for the whole simulation
+
+
+
+
+
+%% Beampattern response
+BP = load(fullfile(param.bp_path,param.bp_file));
+if strcmp(param.nbwb,'wb')
+    BP.bp_y = interp1(BP.freq_bp,BP.bp,freq_y);
+end
+
+
+%% Fish scattering model
+FISH_MODEL = load(fullfile(param.fish_path,param.fish_file));
+if strcmp(param.nbwb,'wb')
+    FISH_MODEL.fbs_y = interp1(FISH_MODEL.freq_fish,FISH_MODEL.fbs_len_angle,freq_y);
+    FISH_MODEL.fbs_y(isnan(FISH_MODEL.fbs_y)) = 0;
 end
 
 
@@ -162,13 +181,19 @@ parfor iS=1:num_sample  % realization loop
         case 'point'   % Point scatterer
             H_fish = [];
             for iN=1:length(N)
-                H_fish = [H_fish, ones(length(freq_y),sum(N))];
+                H_fish = [H_fish, mix_r(iN)/sqrt(2)*ones(length(freq_y),sum(N))];
+            end
+            if strcmp(param.nbwb,'wb')
+                H_fish = repmat(H_fish,length(freq_y),1);
             end
             
         case 'rayl'    % Rayleigh scatterer
             H_fish = [];
             for iN=1:length(N)
-                H_fish = [H_fish, repmat(raylrnd(mix_r(iN)/sqrt(2),1,N(iN)),length(freq_y),1)];
+                H_fish = [H_fish;raylrnd(mix_r(iN)/sqrt(2),1,N(iN))];
+            end
+            if strcmp(param.nbwb,'wb')
+                H_fish = repmat(H_fish,length(freq_y),1);
             end
             
         case 'fish'    % Fish-like scatterer
@@ -185,12 +210,12 @@ parfor iS=1:num_sample  % realization loop
             
             % select bp response from preloaded model
             idx = (len_idx-1)*length(FISH_MODEL.angle)+angle_idx;
-            if strcmp(param.scatterer.nbwb,'wb')       % broadband fish response
+            if strcmp(param.nbwb,'wb')       % broadband fish response
                 H_fish = FISH_MODEL.fbs_y(:,idx);
-            elseif strcmp(param.scatterer.nbwb,'nb')   % narrowband fish response
-                [~,nb_idx] = min(abs(freq_y-nb_freq));
-                H_fish = repmat(FISH_MODEL.fbs_y(nb_idx,idx),length(freq_y),1);
                 H_fish(1,:) = 0;  % set freq=0 component=0
+            elseif strcmp(param.nbwb,'nb')   % narrowband fish response
+                H_fish = interp1(FISH_MODEL.freq_fish,FISH_MODEL.fbs_len_angle,param.nb_freq);
+                H_fish = H_fish(idx);
             end
 
 %         case 'prosph'  % Prolate spheroid    % =======NOT FINISHED========
@@ -233,16 +258,27 @@ parfor iS=1:num_sample  % realization loop
     theta = acos(u);  % angle in the beam
 %     theta = rand_piston_angle(sum(N),bpa)';  % angle in the beam
     [~,ind] = min(abs(repmat(theta,1,length(BP.theta))-...
-                      repmat(BP.theta,sum(N),1)),[],2); % pick the right bp
-    H_bp = BP.bp_y(:,ind);
+                      repmat(BP.theta,sum(N),1)),[],2); % pick the right bp idx
+    if strcmp(param.nbwb,'wb')
+        H_bp = BP.bp_y(:,ind);
+    elseif strcmp(param.nbwb,'nb')
+%     fac = (2*pi*param.nb_freq/param.c)*0.211*sin(theta);
+%     H_bp = (2*besselj(1,fac)./(fac)).^2;
+        H_bp = interp1(BP.freq_bp,BP.bp,param.nb_freq);
+        H_bp = H_bp(ind);
+    end
 
-    % Assemble and ifft
-    H_scat = repmat(Rss,1,sum(N)).*H_fish.*H_bp;
-    h_scat = ifftshift(ifft([H_scat;flipud(conj(H_scat(2:end,:)))]),1);
+    % wb: assemble and ifft
+    if strcmp(param.nbwb,'wb')
+        H_scat = repmat(Rss,1,sum(N)).*H_fish.*H_bp;
+        h_scat = ifftshift(ifft([H_scat;flipud(conj(H_scat(2:end,:)))]),1);
+    else
+        h_scat = y.'*(H_bp.*H_fish);
+    end
 
     % Delay (location of fish)
     % need to do in the time domain since phase variation > 2*pi
-    time = round(rand(sum(N),1)*gateL + yL);
+    time = round(rand(sum(N),1)*gateL+yL);
     
     % Time domain impulse summation
     resp_temp = zeros(frameL,sum(N));
