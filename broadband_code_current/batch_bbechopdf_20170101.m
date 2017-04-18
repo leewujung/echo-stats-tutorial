@@ -15,7 +15,9 @@ param.scatterer.nbwb = 'wb';
 
 N = [25,250,2500];
 mix_r = 1;
-num_sample = 1e3;
+num_sample_str = '1e3';
+num_sample = eval(num_sample_str);
+
 
 save_base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
 [~,script_name,~] = fileparts(mfilename('fullpath'));
@@ -29,6 +31,6 @@ param.save_path = save_path;
 param.save_file = save_file;
 
 for iN=1:length(N)
-    bbechopdf_20170417(N(iN),mix_r,num_sample,param);
+    bbechopdf_20170417(N(iN),mix_r,num_sample,num_sample_str,param);
 end
 

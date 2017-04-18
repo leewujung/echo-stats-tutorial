@@ -1,4 +1,4 @@
-function bbechopdf_20170417(N,mix_r,num_sample,param)
+function [s,param] = bbechopdf_20170417(N,mix_r,num_sample,param)
 % INPUT
 %   N                       number of scatterers in the gate
 %                           an array if mixed assemblage
@@ -13,8 +13,6 @@ function bbechopdf_20170417(N,mix_r,num_sample,param)
 %                           1-full Gaussian taper
 %                           2-HF Hann taper
 %                           3-LF Hann taper
-%   param.save_path         folder to save the results
-%   param.save_file         description of the simulation condition
 %   param.bpa               restricted angle in the beam
 %                           [] - entire half space
 %                           bpa - only within bpa [deg]
@@ -150,7 +148,7 @@ frameL = gateL+2*yL;
 % t_frame = (0:frameL-1)*dt;
 mid_frame_pt = round((frameL+1)/2);
 
-% resp = zeros(frameL,num_sample);
+% resp_temp = zeros(frameL,num_sample);
 s = zeros(1,num_sample);
 
 
@@ -195,38 +193,38 @@ parfor iS=1:num_sample  % realization loop
                 H_fish(1,:) = 0;  % set freq=0 component=0
             end
 
-        case 'prosph'  % Prolate spheroid    % =======NOT FINISHED========
-            % Prolate spheroid high-freq asymptotic solution
-            phase = unifrnd(0,2*pi,N,1);
-            
-            cc = 1;
-            e_ac = 1/10;
-            b1 = cc*e_ac; % length of semi-minor axis
-            if strcmp(param.scatterer.sph_rot_opt,'2D')    % Constrain spheroid rotation in MRA plane
-                theta_sph = unifrnd(0,2*pi,N,1);  % before 2017/04,
-            elseif strcmp(param.scatterer.sph_rot_opt,'3D')  % theta_sph follow sin(theta_sph) in 3D spherical coord
-                u = unifrnd(0,1,N,1);
-                theta_sph = pi/2-acos(u);  % theta_sph calculated from normal incidence
-            end
-            fss = cc/2.*sin(atan(b1./(cc.*tan(theta_sph)))).^2./cos(theta_sph).^2;
-            
-            roughness = raylrnd(ones(N,1)*1/sqrt(2));
-            amp = fss.*roughness;            
-            s = amp.*exp(1i*phase);
-
-            H_fish = repmat(s,1,length(freq_y))';
-            
-            H_fish = [];
-            for iN=1:length(N)
-                %amp_tmp = prosph_3D_simulation(ar,N(iN),1,mix_r(iN));  % all angles of orientation
-                amp_tmp = prosph_amp(ar,N(iN),1,mix_r(iN),...
-                    [angle_mean,angle_std],[len_bin',len_dist']);
-                H_fish = [H_fish, repmat(amp_tmp,length(freq_y),1)];
-            end
-            %for iN=1:length(N)
-            %    amp_tmp = prosph_3D_simulation(ar,N(iN),1,mix_r(iN));
-            %    H_fish(:,cumsum([0 N(1:iN-1)])+(1:N(iN))) = repmat(amp_tmp,length(freq_y),1);
-            %end
+%         case 'prosph'  % Prolate spheroid    % =======NOT FINISHED========
+%             % Prolate spheroid high-freq asymptotic solution
+%             phase = unifrnd(0,2*pi,N,1);
+%             
+%             cc = 1;
+%             e_ac = 1/10;
+%             b1 = cc*e_ac; % length of semi-minor axis
+%             if strcmp(param.scatterer.sph_rot_opt,'2D')    % Constrain spheroid rotation in MRA plane
+%                 theta_sph = unifrnd(0,2*pi,N,1);  % before 2017/04,
+%             elseif strcmp(param.scatterer.sph_rot_opt,'3D')  % theta_sph follow sin(theta_sph) in 3D spherical coord
+%                 u = unifrnd(0,1,N,1);
+%                 theta_sph = pi/2-acos(u);  % theta_sph calculated from normal incidence
+%             end
+%             fss = cc/2.*sin(atan(b1./(cc.*tan(theta_sph)))).^2./cos(theta_sph).^2;
+%             
+%             roughness = raylrnd(ones(N,1)*1/sqrt(2));
+%             amp = fss.*roughness;            
+%             s = amp.*exp(1i*phase);
+% 
+%             H_fish = repmat(s,1,length(freq_y))';
+%             
+%             H_fish = [];
+%             for iN=1:length(N)
+%                 %amp_tmp = prosph_3D_simulation(ar,N(iN),1,mix_r(iN));  % all angles of orientation
+%                 amp_tmp = prosph_amp(ar,N(iN),1,mix_r(iN),...
+%                     [angle_mean,angle_std],[len_bin',len_dist']);
+%                 H_fish = [H_fish, repmat(amp_tmp,length(freq_y),1)];
+%             end
+%             %for iN=1:length(N)
+%             %    amp_tmp = prosph_3D_simulation(ar,N(iN),1,mix_r(iN));
+%             %    H_fish(:,cumsum([0 N(1:iN-1)])+(1:N(iN))) = repmat(amp_tmp,length(freq_y),1);
+%             %end
 
     end
 
@@ -237,15 +235,10 @@ parfor iS=1:num_sample  % realization loop
     [~,ind] = min(abs(repmat(theta,1,length(BP.theta))-...
                       repmat(BP.theta,sum(N),1)),[],2); % pick the right bp
     H_bp = BP.bp_y(:,ind);
-    %H_bp = ones(length(freq_y),sum(N));
 
     % Assemble and ifft
     H_scat = repmat(Rss,1,sum(N)).*H_fish.*H_bp;
     h_scat = ifftshift(ifft([H_scat;flipud(conj(H_scat(2:end,:)))]),1);
-    % Wrong use of ifftshift
-    %h_scat = ifftshift(ifft([H_scat;flipud(conj(H_scat(2:end,:)))]));
-    % Forgot to conjugate
-    %h_scat = ifftshift(ifft([H_scat;flipud(H_scat(2:end,:))]));
 
     % Delay (location of fish)
     % need to do in the time domain since phase variation > 2*pi
@@ -258,24 +251,14 @@ parfor iS=1:num_sample  % realization loop
                            zeros(frameL-time(iN)-yHalfL+1,1)];
     end
     resp_temp = sum(resp_temp,2);
-%     resp(:,iS) = resp_temp;
     if ~isreal(resp_temp)
         disp('Error: Invalid time series with imaginary part');
     end
     resp_temp = abs(hilbert(resp_temp));
-    %    resp_env(:,iS) = resp_temp;
-    s(iS) = resp_temp(mid_frame_pt);
 
+    s(iS) = resp_temp(mid_frame_pt);
+    
 end % realization loop
+
 disp('time to generate all samples')
 toc
-
-
-%% Save file
-if ~isempty(param.save_path)
-    disp('saving file...');
-    sfname = [param.save_file,'_',nn,rr,...
-              'sampleN',num2str(num_sample),...
-              '_gateLen',num2str(param.gate_len),'_freqDepBP.mat'];
-    save([param.save_path,'/',sfname],'param','s');
-end
