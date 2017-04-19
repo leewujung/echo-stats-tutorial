@@ -11,7 +11,7 @@ addpath '~/Dropbox/0_CODE/MATLAB/saveSameSize/'
 addpath '~/Dropbox/0_CODE/prolatespheroid/'
 
 % base_path = '~/Desktop/echo_stat_figs';
-base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+base_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
@@ -26,7 +26,7 @@ data_path = 'fig_16_prosph_scatterer';
 X = load('fig_12_pb_ka_ka_num.mat');
 ka = X.ka_3deg;
 % ka = 2*pi;
-sph_rot_opt = '2D';
+sph_rot_opt = '3D';
 
 pingnum_str = '1e7';
 pingnum = eval(pingnum_str);
@@ -47,17 +47,21 @@ for iN=1:length(N_all)
     E = load(fullfile(base_path,data_path,simu_file));
     [p_x,x] = findEchoDist_kde(E.env/sqrt(mean(E.env.^2)),npt);
     loglog(x,p_x,'-','linewidth',1);
+    [x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),npt);
+    loglog(x,p_x,'.','markersize',8);
     
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_3D_bp0.mat',...
         pingnum_str,ka,N_all(iN));
     E = load(fullfile(base_path,data_path,simu_file));
     [p_x,x] = findEchoDist_kde(E.env/sqrt(mean(E.env.^2)),npt);
     loglog(x,p_x,'-','linewidth',1);
+    [x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),npt);
+    loglog(x,p_x,'.','markersize',8);
     
     title(sprintf('ka=%2.4f, smplN=%s, N=%d, no bp',...
         ka,pingnum_str,N_all(iN)),...
         'fontsize',18);
-    ll = legend('Rayleigh','2D (half-plane)','3D (half-space)',...
+    ll = legend('Rayleigh','2D (half-plane)','2D bin','3D (half-space)','3D bin',...
         'location','southwest');
     set(ll,'fontsize',18);
     set(gca,'fontsize',16)
@@ -88,17 +92,21 @@ for iN=1:length(N_all)
     E = load(fullfile(base_path,data_path,simu_file));
     [p_x,x] = findEchoDist_kde(E.env/sqrt(mean(E.env.^2)),npt);
     loglog(x,p_x,'-','linewidth',1);
+    [x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),npt);
+    loglog(x,p_x,'.','markersize',8);
     
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_3D_bp1.mat',...
         pingnum_str,ka,N_all(iN));
     E = load(fullfile(base_path,data_path,simu_file));
     [p_x,x] = findEchoDist_kde(E.env/sqrt(mean(E.env.^2)),npt);
     loglog(x,p_x,'-','linewidth',1);
+    [x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),npt);
+    loglog(x,p_x,'.','markersize',8);
     
     title(sprintf('ka=%2.4f, smplN=%s, N=%d, with bp',...
         ka,pingnum_str,N_all(iN)),...
         'fontsize',18);
-    ll = legend('Rayleigh','2D (half-plane)','3D (half-space)',...
+    ll = legend('Rayleigh','2D (half-plane)','2D bin','3D (half-space)','3D bin',...
         'location','southwest');
     set(ll,'fontsize',18);
     set(gca,'fontsize',16)
@@ -132,6 +140,10 @@ for iN=1:length(N_all)
     cdf_x = cumtrapz(x,p_x);
     pfa_x = 1-cdf_x;
     loglog(x,pfa_x,'-','linewidth',1);
+    [x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),npt);
+    cdf_x = cumtrapz(x,p_x);
+    pfa_x = 1-cdf_x;
+    loglog(x,pfa_x,'.','markersize',8);
     
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_3D_bp1.mat',...
         pingnum_str,ka,N_all(iN));
@@ -140,11 +152,16 @@ for iN=1:length(N_all)
     cdf_x = cumtrapz(x,p_x);
     pfa_x = 1-cdf_x;
     loglog(x,pfa_x,'-','linewidth',1);
+    [x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),npt);
+    cdf_x = cumtrapz(x,p_x);
+    pfa_x = 1-cdf_x;
+    loglog(x,pfa_x,'.','markersize',8);
+
     
     title(sprintf('ka=%2.4f, smplN=%s, N=%d, with bp',...
         ka,pingnum_str,N_all(iN)),...
         'fontsize',18);
-    ll = legend('Rayleigh','2D (half-plane)','3D (half-space)',...
+    ll = legend('Rayleigh','2D (half-plane)','2D bin','3D (half-space)','3D bin',...
         'location','southwest');
     set(ll,'fontsize',18);
     set(gca,'fontsize',16)
@@ -177,17 +194,22 @@ for iN=1:length(N_all)
     E = load(fullfile(base_path,data_path,simu_file));
     [p_x,x] = findEchoDist_kde(E.env,npt);
     loglog(x,p_x,'-','linewidth',1);
+    [x,p_x] = findEchoDist(E.env,npt);
+    loglog(x,p_x,'.','markersize',8);
     
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_3D_bp1.mat',...
         pingnum_str,ka,N_all(iN));
     E = load(fullfile(base_path,data_path,simu_file));
     [p_x,x] = findEchoDist_kde(E.env,npt);
     loglog(x,p_x,'-','linewidth',1);
+    [x,p_x] = findEchoDist(E.env,npt);
+    loglog(x,p_x,'.','markersize',8);
+
     
     title(sprintf('ka=%2.4f, smplN=%s, N=%d, with bp',...
         ka,pingnum_str,N_all(iN)),...
         'fontsize',18);
-    ll = legend('Rayleigh','2D (half-plane)','3D (half-space)',...
+    ll = legend('Rayleigh','2D (half-plane)','2D bin','3D (half-space)','3D bin',...
         'location','southwest');
     set(ll,'fontsize',18);
     set(gca,'fontsize',16)

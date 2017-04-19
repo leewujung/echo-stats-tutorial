@@ -6,9 +6,9 @@ clear
 addpath ~/code/echo_stat_tutorial/broadband_code_current/
 
 % Set params
-N = [25];
+N = [25,250];
 mix_r = [1,1];
-num_sample_str = '1e3';
+num_sample_str = '5e5';
 num_sample = eval(num_sample_str);
 
 save_base_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/';
@@ -32,6 +32,8 @@ param.fish_file = 'fish_scat_response_angle-90to90deg_len19to29cm.mat';
 param.fish_len_path = '~/code/echo_stat_tutorial/broadband_code_current/fish_info/';
 param.fish_len_file = 'fish_len_dist.mat';
 
+if 0
+
 % Run bbechopdf code
 for iN=1:length(N)
     [s, param] = bbechopdf_20170417(N(iN),mix_r,num_sample,param);
@@ -44,6 +46,8 @@ for iN=1:length(N)
             save_file_pre,N(iN),mix_r(iN),num_sample_str,param.gate_len);
     end
     save([save_path,'/',sfname],'param','s');
+
+end
 
 end
 
@@ -61,14 +65,16 @@ for iN=1:length(N)
     simu_file = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_nb.mat',...
         'rayleigh',N(iN),1,num_sample_str,param.gate_len);
     E = load(fullfile(save_path,simu_file));
-    [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
+%     [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
+    [x,p_x] = findEchoDist(E.s/sqrt(mean(E.s.^2)),npt);
     loglog(x,p_x,'b-','linewidth',2);
 
     % Load broadband file
     simu_file = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_wb.mat',...
         'rayleigh',N(iN),1,num_sample_str,param.gate_len);
     E = load(fullfile(save_path,simu_file));
-    [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
+%     [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
+    [x,p_x] = findEchoDist(E.s/sqrt(mean(E.s.^2)),npt);
     loglog(x,p_x,'r-','linewidth',2);
 
     % misc

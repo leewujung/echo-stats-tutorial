@@ -11,7 +11,7 @@ addpath '~/Dropbox/0_CODE/MATLAB/saveSameSize/'
 addpath '~/Dropbox/0_CODE/prolatespheroid/'
 
 % base_path = '~/Desktop/echo_stat_figs';
-base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+base_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
@@ -25,7 +25,7 @@ end
 X = load('fig_12_pb_ka_ka_num.mat');
 ka = X.ka_3deg;
 % ka = 2*pi;
-sph_rot_opt = '2D';
+sph_rot_opt = '3D';
 
 pingnum_str = '1e7';
 pingnum = eval(pingnum_str);
@@ -132,16 +132,16 @@ end
 % title(sprintf('ka=%2.4f, smplN=%s, no bp',...
 %     ka,pingnum_str),...
 %     'fontsize',18);
-ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
-    'N=100 (0.375)','N=1000 (3.75)',...
-    'location','southwest');
-set(ll,'fontsize',18);
+% ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
+%     'N=100 (0.375)','N=1000 (3.75)',...
+%     'location','southwest');
+% set(ll,'fontsize',18);
 set(gca,'fontsize',16)
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$p_e(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
 xlim([1e-3 1e2]);
 ylim([1e-6 1e3]);
-title('PDF')
+% title('PDF')
 
 save_fname = sprintf('%s_ka%2.4f_smpl%s_%s_pdf_bp0',...
     str,ka,pingnum_str,sph_rot_opt);
@@ -178,16 +178,16 @@ end
 % title(sprintf('ka=%2.4f, smplN=%s, with bp',...
 %     ka,pingnum_str),...
 %     'fontsize',18);
-ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
-    'N=100 (0.375)','N=1000 (3.75)',...
-    'location','southwest');
-set(ll,'fontsize',18);
+% ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
+%     'N=100 (0.375)','N=1000 (3.75)',...
+%     'location','southwest');
+% set(ll,'fontsize',18);
 set(gca,'fontsize',16)
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$p_e(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
 xlim([1e-3 1e3]);
 ylim([1e-7 1e3]);
-title('PDF')
+% title('PDF')
 
 save_fname = sprintf('%s_ka%2.4f_smpl%s_%s_pdf_bp1',...
     str,ka,pingnum_str,sph_rot_opt);
@@ -235,7 +235,7 @@ set(gca,'fontsize',16)
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$PFA(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
 xlim([1e-3 1e3]);
-ylim([1e-6 1e3]);
+ylim([1e-6 1e1]);
 % title('PFA')
 
 save_fname = sprintf('%s_ka%2.4f_smpl%s_%s_pfa_bp1',...
