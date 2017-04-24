@@ -36,7 +36,7 @@ if ~exist(save_path,'dir')
     mkdir(save_path);
 end
 
-N_all = [1,10,100,1000];
+% N_all = [1,10,100,1000];
 v_rayl = 1/sqrt(2);
 
 % leg_str = cell(1,length(N_all)+1);
@@ -106,12 +106,13 @@ end
 
 
 % Plot: PDF NO BEAMPATTERN
+N_all = [1,2,5,10];
+
 fig = figure;
 xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
 loglog(xr,rayl,'k','linewidth',2);
 hold on
-
 for iN=1:length(N_all)    
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_%s_bp0.mat',...
         pingnum_str,ka,N_all(iN),sph_rot_opt);
@@ -132,10 +133,9 @@ end
 % title(sprintf('ka=%2.4f, smplN=%s, no bp',...
 %     ka,pingnum_str),...
 %     'fontsize',18);
-% ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
-%     'N=100 (0.375)','N=1000 (3.75)',...
-%     'location','southwest');
-% set(ll,'fontsize',18);
+ll = legend('Rayleigh','N=1','N=2','N=5','N=10',...
+    'location','southwest');
+set(ll,'fontsize',18);
 set(gca,'fontsize',16)
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$p_e(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
@@ -151,12 +151,12 @@ saveSameSize_100(fig,'file',[fullfile(save_path,save_fname),'.png'],...
 
 
 % Plot: PDF WITH BEAMPATTERN
+N_all = [1,10,100,1000];
 fig = figure;
 xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
 loglog(xr,rayl,'k','linewidth',2);
 hold on
-
 for iN=1:length(N_all)
     
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_%s_bp1.mat',...
@@ -178,10 +178,10 @@ end
 % title(sprintf('ka=%2.4f, smplN=%s, with bp',...
 %     ka,pingnum_str),...
 %     'fontsize',18);
-% ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
-%     'N=100 (0.375)','N=1000 (3.75)',...
-%     'location','southwest');
-% set(ll,'fontsize',18);
+ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
+    'N=100 (0.375)','N=1000 (3.75)',...
+    'location','southwest');
+set(ll,'fontsize',18);
 set(gca,'fontsize',16)
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$p_e(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
@@ -197,6 +197,7 @@ saveSameSize_100(fig,'file',[fullfile(save_path,save_fname),'.png'],...
 
 
 % Plot: PFA WITH BEAMPATTERN
+N_all = [1,10,100,1000];
 fig = figure;
 xr = logspace(-3,10,5000);
 rayl = raylpdf(xr,1/sqrt(2));

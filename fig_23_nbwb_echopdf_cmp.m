@@ -4,10 +4,11 @@
 clear
 
 addpath ~/code/echo_stat_tutorial/broadband_code_current/
+addpath '~/Dropbox/0_CODE/MATLAB/saveSameSize/'
 
 % Set params
-N = [25,250];
-mix_r = [1,1];
+N = [25,250,2500];
+mix_r = ones(length(N),1);
 num_sample_str = '5e5';
 num_sample = eval(num_sample_str);
 
@@ -53,7 +54,7 @@ end
 
 
 % Plot
-npt = 80;
+npt = 120;
 for iN=1:length(N)
     fig = figure;
     xr = logspace(-3,log10(2000),500);
@@ -65,16 +66,16 @@ for iN=1:length(N)
     simu_file = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_nb.mat',...
         'rayleigh',N(iN),1,num_sample_str,param.gate_len);
     E = load(fullfile(save_path,simu_file));
-%     [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
-    [x,p_x] = findEchoDist(E.s/sqrt(mean(E.s.^2)),npt);
+    [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
+%     [x,p_x] = findEchoDist(E.s/sqrt(mean(E.s.^2)),npt);
     loglog(x,p_x,'b-','linewidth',2);
 
     % Load broadband file
     simu_file = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_wb.mat',...
         'rayleigh',N(iN),1,num_sample_str,param.gate_len);
     E = load(fullfile(save_path,simu_file));
-%     [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
-    [x,p_x] = findEchoDist(E.s/sqrt(mean(E.s.^2)),npt);
+    [p_x,x] = findEchoDist_kde(E.s/sqrt(mean(E.s.^2)),npt);
+%     [x,p_x] = findEchoDist(E.s/sqrt(mean(E.s.^2)),npt);
     loglog(x,p_x,'r-','linewidth',2);
 
     % misc
@@ -89,6 +90,13 @@ for iN=1:length(N)
     ylabel('$p_e(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
     xlim([1e-3 1e2]);
     ylim([1e-6 1e3]);
-    
+
+    % Save figure
+    save_fname = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f',...
+        script_name,N(iN),mix_r(iN),num_sample_str,param.gate_len);
+    saveas(fig,[fullfile(save_path,save_fname),'.fig'],'fig');
+    saveSameSize_100(fig,'file',[fullfile(save_path,save_fname),'.png'],...
+        'format','png');
+
 end
 

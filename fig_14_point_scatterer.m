@@ -7,7 +7,7 @@ clear
 addpath '~/Dropbox/0_CODE'/MATLAB/saveSameSize/
 
 % base_path = '~/Desktop/echo_stat_figs';
-base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+base_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
@@ -88,6 +88,7 @@ end
 
 
 % Plot: PDF WITH BEAMPATTERN
+N_all = [1,10,100,1000];
 fig = figure;
 xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
@@ -117,7 +118,6 @@ ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
     'N=100 (0.375)','N=1000 (3.75)',...
     'location','southwest');
 set(ll,'fontsize',18);
-text(3e-2,2e2,'(b) PDF, with beampattern','fontsize',24);
 set(gca,'fontsize',16)
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$p_e(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
@@ -132,6 +132,7 @@ saveSameSize_100(fig,'file',[fullfile(save_path,save_fname),'.png'],...
 
 
 % Plot: PFA WITH BEAMPATTERN
+N_all = [1,10,100,1000];
 fig = figure;
 xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
@@ -165,7 +166,6 @@ ll = legend('Rayleigh','N=1 (0.00375)','N=10 (0.0375)',...
     'N=100 (0.375)','N=1000 (3.75)',...
     'location','southwest');
 set(ll,'fontsize',18);
-text(3e-2,4,'(c) PFA, with beampattern','fontsize',24);
 set(gca,'fontsize',16)
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$PFA(\tilde{e}/<\tilde{e}^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
@@ -212,7 +212,6 @@ end
 ll = legend('Rayleigh','N=1','N=2','N=3','N=4',...
     'location','southwest');
 set(ll,'fontsize',18);
-text(3e-2,2e2,'(a) PDF, no beampattern','fontsize',24);
 set(gca,'fontsize',16);
 set(gca,'xscale','log','yscale','log');  % log scale
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
