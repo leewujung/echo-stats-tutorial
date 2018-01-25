@@ -58,6 +58,20 @@ Spent some time on the routine to find the good-enough ka values for approaching
 
 
 **************************************************************
+## 2017/04/17
+### Prolate spheroid echo pdf (Fig. 17)
+1. Update code to allow 3D rotation of prolate spheroid
+2. Compare 2D and 3D results
+
+### Update bbechopdf code
+1. Use struct to pass input parameters... the code is MUCH cleaner now!
+2. Still need work:
+	- prolate spheroid option
+	- get_tx function, now generate an octave bandwidth chirp centered at 50 kHz
+	- restrained beampattern angle: variable 'bpa'
+
+
+**************************************************************
 ## 2018/01/24
 ### Working on response to reviewers
 - C.  Utility of the physics based models for inference: In Sect. II.A the authors make an important point that physics based models are useful for prediction (the forward problem) and for inference (the backward problem or estimation). I did not see the inference topic explored in the latter part of the text in any detail and fear this application may suffer from the same issues as matched field processing. The authors should at a minimum describe/reference how much of this has been done in terms of real applications and performance limits like Cramer Rao lower bounds.
