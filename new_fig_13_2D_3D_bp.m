@@ -3,8 +3,8 @@
 
 
 clear
-addpath '~/Dropbox/0_CODE'/MATLAB/saveSameSize/
-base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+addpath '~/code_matlab_dn/saveSameSize/'
+base_path = '/home/wu-jung/internal_2tb/echo_stat_tutorial/echo_stat_figs';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
