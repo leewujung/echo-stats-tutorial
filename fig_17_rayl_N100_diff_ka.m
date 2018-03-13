@@ -104,7 +104,8 @@ end
 % title(sprintf('N=%d, smplN=%s',...
 %     N,pingnum_str),...
 %     'fontsize',18);
-ll = legend('Rayleigh','1^o','3^o','10^o','20^o');
+ll = legend('Rayleigh','1^o (0.0417)','3^o (0.375)',...
+            '10^o (4.13)','20^o (16.0)');
 set(ll,'fontsize',18,'location','southwest');
 new_pos = ll.Position;
 new_pos(1) = 0.3;
