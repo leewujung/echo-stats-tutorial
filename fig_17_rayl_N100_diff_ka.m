@@ -3,10 +3,11 @@
 % 2017 04 12  Update figure legend, axis labels, and curve style
 
 
-addpath '~/Dropbox/0_CODE'/MATLAB/saveSameSize/
+addpath '~/code_matlab_dn/saveSameSize/'
 
 % base_path = '~/Desktop/echo_stat_figs';
-base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+% base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+base_path = '/home/wu-jung/internal_2tb/echo_stat_tutorial/echo_stat_figs';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
@@ -103,8 +104,12 @@ end
 % title(sprintf('N=%d, smplN=%s',...
 %     N,pingnum_str),...
 %     'fontsize',18);
-ll = legend('Rayleigh','1^o','3^o','10^o','20^o');
-set(ll,'fontsize',18);
+ll = legend('Rayleigh','1^o (0.0417)','3^o (0.375)',...
+            '10^o (4.13)','20^o (16.0)');
+set(ll,'fontsize',18,'location','southwest');
+new_pos = ll.Position;
+new_pos(1) = 0.3;
+set(ll,'Position',new_pos);
 text(3e-3,3e2,'100 Rayleigh scatterers','fontsize',24);
 set(gca,'fontsize',16)
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);

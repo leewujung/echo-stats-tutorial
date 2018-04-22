@@ -31,8 +31,8 @@ axis([1e-2 1e1 1e-6 1e3])
 xlabel('$x/<x^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$\mathcal{F}(x/<x^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
 % title('Rayleigh, log-log');
-saveas(gcf,fullfile(save_path,[script_name,'_linlin.fig']),'fig');
-saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_linlin.png']),...
+saveas(gcf,fullfile(save_path,[script_name,'_loglog.fig']),'fig');
+saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_loglog.png']),...
     'format','png','renderer','painters');
 
 % lin-lin plot
@@ -54,6 +54,6 @@ set(ll,'fontsize',18)
 ll_pos = get(ll,'position');
 set(ll,'position',[ll_pos(1),0.55,ll_pos(3),ll_pos(4)])
 % title('Rayleigh, lin-lin');
-saveas(gcf,fullfile(save_path,[script_name,'_loglog.fig']),'fig');
-saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_loglog.png']),...
+saveas(gcf,fullfile(save_path,[script_name,'_linlin.fig']),'fig');
+saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_linlin.png']),...
     'format','png','renderer','painters');
