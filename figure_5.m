@@ -1,11 +1,14 @@
-% Fig. 5 of echo stat tutorial
-% 2016 10 18  first plot
-% 2017 04 10  Update curve style and figure legend, axis labels
+% Code to generate Figure 5 of the echo statistics tutorial
+% This figure plots the Rayleigh PDF and the associated CDF and PFA in both
+% lin-lin and log-log scales 
+%
+% @author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
+
 
 clear
 
-addpath '~/Dropbox/0_CODE'/MATLAB/saveSameSize/
-save_base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+addpath './util_fcn'
+save_base_path = './figs';
 
 [~,script_name,~] = fileparts(mfilename('fullpath'));
 save_path = fullfile(save_base_path,script_name);
@@ -48,6 +51,8 @@ xlabel('$x/<x^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$\mathcal{F}(x/<x^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
 ll = legend('PDF','CDF','PFA');
 set(ll,'fontsize',18)
+ll_pos = get(ll,'position');
+set(ll,'position',[ll_pos(1),0.55,ll_pos(3),ll_pos(4)])
 % title('Rayleigh, lin-lin');
 saveas(gcf,fullfile(save_path,[script_name,'_loglog.fig']),'fig');
 saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_loglog.png']),...
