@@ -4,10 +4,11 @@
 clear
 %addpath '/mnt/storage/modeling_code_current/'
 %addpath '/mnt/storage/analysis_code_current/'
-addpath '~/Dropbox/0_CODE'/MATLAB/saveSameSize/
+addpath '~/code_matlab_dn/saveSameSize/'
 
 % base_path = '~/Desktop/echo_stat_figs';
-base_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/';
+%base_path = '/Volumes/wjlee_apl_2 1/echo_stat_tutorial/echo_stat_figs/';
+base_path = '/home/wu-jung/internal_2tb/echo_stat_tutorial/echo_stat_figs';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
@@ -212,6 +213,9 @@ end
 ll = legend('Rayleigh','N=1','N=2','N=3','N=4',...
     'location','southwest');
 set(ll,'fontsize',18);
+new_pos = ll.Position;
+new_pos(1) = 0.25;
+set(ll,'Position',new_pos);
 set(gca,'fontsize',16);
 set(gca,'xscale','log','yscale','log');  % log scale
 xlabel('$\tilde{e}/<\tilde{e}^2>^{1/2}$','Interpreter','LaTex','fontsize',24);

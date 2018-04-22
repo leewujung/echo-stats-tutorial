@@ -1,11 +1,14 @@
 % Fig. 5 of echo stat tutorial
 % 2016 10 18  first plot
 % 2017 04 10  Update curve style and figure legend, axis labels
+% 2018 03 08  Update lin-lin figure legend location
+%             Also found that before _loglog and _linlin are
+%             reversed in output filename
 
 clear
 
-addpath '~/Dropbox/0_CODE'/MATLAB/saveSameSize/
-save_base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
+addpath ~/code_matlab_dn/saveSameSize/
+save_base_path = '/home/wu-jung/internal_2tb/echo_stat_tutorial/echo_stat_figs';
 
 [~,script_name,~] = fileparts(mfilename('fullpath'));
 save_path = fullfile(save_base_path,script_name);
@@ -28,8 +31,8 @@ axis([1e-2 1e1 1e-6 1e3])
 xlabel('$x/<x^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$\mathcal{F}(x/<x^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
 % title('Rayleigh, log-log');
-saveas(gcf,fullfile(save_path,[script_name,'_linlin.fig']),'fig');
-saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_linlin.png']),...
+saveas(gcf,fullfile(save_path,[script_name,'_loglog.fig']),'fig');
+saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_loglog.png']),...
     'format','png','renderer','painters');
 
 % lin-lin plot
@@ -47,8 +50,8 @@ axis([0 3 0 1.15])
 xlabel('$x/<x^2>^{1/2}$','Interpreter','LaTex','fontsize',24);
 ylabel('$\mathcal{F}(x/<x^2>^{1/2})$','Interpreter','LaTex','fontsize',24);
 ll = legend('PDF','CDF','PFA');
-set(ll,'fontsize',18)
+set(ll,'fontsize',18,'location','best')
 % title('Rayleigh, lin-lin');
-saveas(gcf,fullfile(save_path,[script_name,'_loglog.fig']),'fig');
-saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_loglog.png']),...
+saveas(gcf,fullfile(save_path,[script_name,'_linlin.fig']),'fig');
+saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_linlin.png']),...
     'format','png','renderer','painters');
