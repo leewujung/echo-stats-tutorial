@@ -1,10 +1,13 @@
-% 2017 01 01  Rayleigh scatterer with and without beampattern, PDF & PFA
-% 2017 04 10  Update curve style and figure legend, axis labels
-
+% Code to generate Figure 13 of the echo statistics tutorial
+% This figure shows beampattern PDF associated with a circular aperture for
+% 3D and 2D distributions of scatterers 
+%
+% Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
 clear
-addpath '~/code_matlab_dn/saveSameSize/'
-base_path = '/home/wu-jung/internal_2tb/echo_stat_tutorial/echo_stat_figs';
+
+addpath './util_fcn'
+base_path = './figs';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
@@ -15,67 +18,59 @@ if ~exist(save_path,'dir')
 end
 
 % Set param
-X = load('fig_12_pb_ka_ka_num.mat');
+X = load('./figs/figure_12/figure_12_ka_num.mat');
 ka = X.ka_3deg;
-% ka = 2*pi;
 
 pingnum_str = '1e8';
 pingnum = eval(pingnum_str);
 
-npt = 100;  % number of points for pe kde estimation
-
-if ~exist(save_path,'dir')
-    mkdir(save_path);
-end
-
-% N_all = 2:4;
-% N_all = [1,10,100,1000];
 N_all = 1;
 v_rayl = 1/sqrt(2);
 
+% Set operation
+mc_opt = 1;  % 0 - do not re-generate realizations
+             % 1 - re-generate all realizations
 
-if 0
-    
-for iN=1:length(N_all)
-    Ns = N_all(iN);
-    
-    param.N = Ns;
-    param.ka = ka;
-    
-    for iP = 1:pingnum
-        phase = rand(1,Ns)*2*pi;
-        amp = ones(1,Ns);
-        s = amp.*exp(1i*phase);
-        
-        % position in 2D beam
-        theta_2D = rand(1,Ns)*pi/2;
-        b_bp1_2D = (2*besselj(1,ka*sin(theta_2D))./(ka*sin(theta_2D))).^2;
-        
-        % E=SB
-        e_bp1_2D = s.*b_bp1_2D;
-        env_bp1_2D(iP) = abs(sum(e_bp1_2D));
-        
-    end % pingnum
-    
-    env = env_bp1_2D;
-    file_save = sprintf('pnum_%s_ka%2.4f_N%04d_bp1_2D.mat',...
-        pingnum_str,ka,Ns);
-    save([save_path,'/',file_save],'env','param');
+% Monte Carlo simulation
+if mc_opt 
+    for iN=1:length(N_all)
+        Ns = N_all(iN);
 
+        param.N = Ns;
+        param.ka = ka;
+
+        env_bp1_2D = zeros(pingnum,1);
+        for iP = 1:pingnum
+            phase = rand(1,Ns)*2*pi;
+            amp = ones(1,Ns);
+            s = amp.*exp(1i*phase);
+
+            % position in 2D beam
+            theta_2D = rand(1,Ns)*pi/2;
+            b_bp1_2D = (2*besselj(1,ka*sin(theta_2D))./(ka*sin(theta_2D))).^2;
+
+            % E=SB
+            e_bp1_2D = s.*b_bp1_2D;
+            env_bp1_2D(iP) = abs(sum(e_bp1_2D));
+
+        end % pingnum
+
+        env = env_bp1_2D;
+        file_save = sprintf('pnum_%s_ka%2.4f_N%04d_bp1_2D.mat',...
+            pingnum_str,ka,Ns);
+        save([save_path,'/',file_save],'env','param');
+    end
 end
 
-end
 
-
-
-if 1
 
 % Plot: PDF WITH BEAMPATTERN
-save_path_3D = 'fig_14_point_scatterer';
-save_path = 'new_fig_13_2D_3D_bp';
+save_path_3D = 'figure_15';    % use simulation results from (Fig. 15 point scatterers)
+% save_path = 'new_fig_13_2D_3D_bp';
 fig = figure;
 xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
+
 for iN=1:length(N_all)    
     simu_file_3D = sprintf('pnum_%s_ka%2.4f_N%04d_bp1.mat',...
         pingnum_str,ka,N_all(iN));
@@ -118,6 +113,8 @@ save_fname = sprintf('%s_smpl%s_ka%2.4f_pdf',...
 saveas(fig,[fullfile(base_path,save_path,save_fname),'.fig'],'fig');
 saveSameSize_150(fig,'file',[fullfile(base_path,save_path,save_fname),'.png'],...
     'format','png');
+
+
 
 % 
 % % Plot: PFA WITH BEAMPATTERN
@@ -163,5 +160,3 @@ saveSameSize_150(fig,'file',[fullfile(base_path,save_path,save_fname),'.png'],..
 % saveas(fig,[fullfile(base_path,save_path,save_fname),'.fig'],'fig');
 % saveSameSize_100(fig,'file',[fullfile(base_path,save_path,save_fname),'.png'],...
 %     'format','png');
-
-end

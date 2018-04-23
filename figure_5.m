@@ -1,8 +1,8 @@
 % Code to generate Figure 5 of the echo statistics tutorial
-% This figure plots the Rayleigh PDF and the associated CDF and PFA in both
+% This figure shows the Rayleigh PDF and the associated CDF and PFA in both
 % lin-lin and log-log scales 
 %
-% @author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
+% Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
 
 clear

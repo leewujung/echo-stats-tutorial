@@ -1,8 +1,8 @@
 % Code to generate Figure 12 of the echo statistics tutorial
-% This figure plots Beampattern PDF associated with circular apertures of
+% This figure shows beampattern PDF associated with circular apertures of
 % varying size and/or frequency 
 %
-% @author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
+% Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
 addpath './util_fcn'
 save_base_path = './figs';

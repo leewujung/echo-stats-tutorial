@@ -1,3 +1,4 @@
 .gitignore~
 *.m~
 .DS_Store
+*.md~
