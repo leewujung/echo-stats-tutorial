@@ -1,5 +1,5 @@
 % Code to generate Figure 15 of the echo statistics tutorial
-% This figure shows Distributions of magnitude of echo in backscatter
+% This figure shows distributions of magnitude of echo in backscatter
 % direction from N point scatterers randomly and uniformly distributed in
 % a thin hemispherical shell  
 %
