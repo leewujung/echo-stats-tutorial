@@ -1,13 +1,19 @@
+% Code to generate Figure 18 of the echo statistics tutorial
+% This figure shows PDF of magnitude of echo from 100 identical Rayleigh
+% scatterers that are randomly and uniformly distributed in thin
+% hemispherical shell 
+%
+% Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
+
+
 % 2017 01 01  Echo pdf of 100 Rayleigh scatterers observed using different
 %             beamwidth
 % 2017 04 12  Update figure legend, axis labels, and curve style
 
 
-addpath '~/code_matlab_dn/saveSameSize/'
-
-% base_path = '~/Desktop/echo_stat_figs';
-% base_path = '/Volumes/wjlee_apl_2/echo_stat_tutorial/echo_stat_figs/';
-base_path = '/home/wu-jung/internal_2tb/echo_stat_tutorial/echo_stat_figs';
+clear
+addpath './util_fcn'
+base_path = './figs';
 
 % Make save path
 str = strsplit(mfilename('fullpath'),'/');
@@ -17,6 +23,7 @@ if ~exist(save_path,'dir')
     mkdir(save_path);
 end
 
+% Set param
 pingnum_str = '1e7';
 pingnum = eval(pingnum_str);
 v_rayl = 1/sqrt(2);
@@ -24,52 +31,51 @@ v_rayl = 1/sqrt(2);
 npt = 80;  % number of points for pe kde estimation
 N = 100;
 
-if ~exist(save_path,'dir')
-    mkdir(save_path);
-end
-
-X = load('fig_12_pb_ka_ka_num.mat');
+X = load('./figs/figure_12/figure_12_ka_num.mat');
 deg = [1,3,10,20];
 
+% Set operation
+mc_opt = 1;  % 0 - do not re-generate realizations
+             % 1 - re-generate all realizations
 
-if 0
-    
-for iD=1:length(deg)
-    eval(['ka = X.ka_',num2str(deg(iD)),'deg;']);
-    param.N = N;
-    param.ka = ka;
-    
-    for iP = 1:pingnum
-        phase = rand(1,N)*2*pi;
-        amp = raylrnd(repmat(v_rayl,1,N));
-        s = amp.*exp(1i*phase);
+% Monte Carlo simulation
+if mc_opt
+    for iD=1:length(deg)
+        eval(['ka = X.ka_',num2str(deg(iD)),'deg;']);
+        param.N = N;
+        param.ka = ka;
         
-        % position in the beam
-        count = 1;
-        theta = zeros(1,N);
-        while count <= N
-            xx = rand(1);
-            yy = rand(1);
-            zz = rand(1);
-            if sqrt(xx.^2+yy.^2+zz.^2)<1
-                xy = sqrt(xx.^2+yy.^2);
-                theta(count) = atan(xy./(zz));
-                count = count +1;
+        for iP = 1:pingnum
+            phase = rand(1,N)*2*pi;
+            amp = raylrnd(repmat(v_rayl,1,N));
+            s = amp.*exp(1i*phase);
+            
+            % position in the beam
+            count = 1;
+            theta = zeros(1,N);
+            while count <= N
+                xx = rand(1);
+                yy = rand(1);
+                zz = rand(1);
+                if sqrt(xx.^2+yy.^2+zz.^2)<1
+                    xy = sqrt(xx.^2+yy.^2);
+                    theta(count) = atan(xy./(zz));
+                    count = count +1;
+                end
             end
-        end
-        b = (2*besselj(1,ka*sin(theta))./(ka*sin(theta))).^2;
+            b = (2*besselj(1,ka*sin(theta))./(ka*sin(theta))).^2;
+            
+            % E=SB
+            e = s.*b;
+            env(iP) = abs(sum(e));
+            
+        end % pingnum
         
-        % E=SB
-        e = s.*b;
-        env(iP) = abs(sum(e));
-        
-    end % pingnum
+        file_save = sprintf('pnum_%s_ka%2.4f_N%04d.mat',...
+            pingnum_str,ka,N);
+        save([save_path,'/',file_save],'env','param');
+    end
     
-    file_save = sprintf('pnum_%s_ka%2.4f_N%04d.mat',...
-        pingnum_str,ka,N);
-    save([save_path,'/',file_save],'env','param');
-end
-
 end
 
 
