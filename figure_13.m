@@ -1,4 +1,4 @@
-% Code to generate Figure 13 of the echo statistics tutorial
+% Code to generate Figure 13 of the echo statistics tutorial.
 % This figure shows beampattern PDF associated with a circular aperture for
 % 3D and 2D distributions of scatterers 
 %

@@ -1,4 +1,4 @@
-% Code to generate Figure 18 of the echo statistics tutorial
+% Code to generate Figure 18 of the echo statistics tutorial.
 % This figure shows PDF of magnitude of echo from 100 identical Rayleigh
 % scatterers that are randomly and uniformly distributed in thin
 % hemispherical shell 

@@ -1,4 +1,4 @@
-% Code to generate Figure 17 of the echo statistics tutorial
+% Code to generate Figure 17 of the echo statistics tutorial.
 % This figure shows distributions of magnitude of echo in backscatter
 % direction from N randomly rough, randomly oriented prolate spheroids
 % randomly and uniformly distributed in a thin hemispherical shell
