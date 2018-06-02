@@ -10,6 +10,6 @@ You can get a copy of the code in the following ways:
   1. Download the whole repo as a zip file using the "Clone or download" button on the top-right corner of this page
   2. Use `git clone --recurse-submodules https://github.com/leewujung/echo_stat_tutorial` to clone this repo to your local machine.
 
-  Note the `--recurse-submodules` option because code from another repo [`broadband-echo-stats`](https://github.com/leewujung/broadband-echo-stats) is used as a [submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to plot Figure 23.
+      Note the `--recurse-submodules` option because code from another repo [`broadband-echo-stats`](https://github.com/leewujung/broadband-echo-stats) is used as a [submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) to plot Figure 23.
 
-  If you forgot to use this option, run `git submodule init` to initialize your local configuration file, and `git submodule update` to check out the appropriate submodule commit.
+      If you forgot to use this option, run `git submodule init` to initialize your local configuration file, and `git submodule update` to check out the appropriate submodule commit.
