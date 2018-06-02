@@ -28,7 +28,6 @@ X = load('./figs/figure_12/figure_12_ka_num.mat');
 ka = X.ka_3deg;
 
 A = 0.05;
-% M_all = 5;
 M_all = 20;
 Nw_all = 2500;
 Ns_all = [25,250,2500];%,20,50,500];
@@ -41,7 +40,7 @@ npt = 120;  % number of points for pe kde estimation
 
 % Set operation
 mc_opt = 1;  % 0 - do not re-generate realizations
-% 1 - re-generate all realizations
+             % 1 - re-generate all realizations
 
 
 % Monte Carlo simulation
@@ -57,6 +56,7 @@ if mc_opt
                     tic
                     ka_sl = ka(iKA);
                     Ns_sl = Ns_all(iNs);
+                    Nw_sl = Nw_all(iNw);
                     param.ka = ka_sl;
                     param.Ns = Ns_sl;
                     param.Nw = Nw_all(iNw);
@@ -71,14 +71,14 @@ if mc_opt
                         % SCATTERER 1
                         % before beampattern
                         v_rayl = v_rayl1;
-                        phase = rand(1,param.Nw)*2*pi;
-                        amp = raylrnd(repmat(v_rayl,1,param.Nw));
+                        phase = rand(1,Nw_sl)*2*pi;
+                        amp = raylrnd(repmat(v_rayl,1,Nw_sl));
                         s1 = amp.*exp(1i*phase);
                         
                         % position in the beam
                         count = 1;
-                        theta = zeros(1,param.Nw);
-                        while count <= param.Nw
+                        theta = zeros(1,Nw_sl);
+                        while count <= Nw_sl
                             xx = rand(1);
                             yy = rand(1);
                             zz = rand(1);
@@ -156,7 +156,6 @@ for iM=1:length(M_all)
             simu_file = sprintf('pnum_%s_ka%2.4f_A%2.2f_M%02d_Nw%04d_Ns%04d.mat',...
                 pingnum_str,ka,A,M_all(iM),Nw_all(iNw),Ns_all(iNs));
             E = load(fullfile(save_path,simu_file));
-            %[x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),npt);
             [p_x,x] = findEchoDist_kde(E.env/sqrt(mean(E.env.^2)),npt);
             hh = loglog(x,p_x,'r','linewidth',2);
             
