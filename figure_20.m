@@ -1,4 +1,4 @@
-% Code to generate Figure 19 of the echo statistics tutorial.
+% Code to generate Figure 20 of the echo statistics tutorial.
 % This figure shows PDF of echo magnitude from multiple Rayleigh scatterers
 % in a split aggregation in which the larger scatterers are separated from
 % the smaller scatterers as illustrated in Fig. 19a
