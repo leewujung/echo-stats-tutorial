@@ -45,24 +45,14 @@ if mc_opt
         param.N = N;
         param.ka = ka;
         
-        for iP = 1:pingnum
+        parfor iP = 1:pingnum
             phase = rand(1,N)*2*pi;
             amp = raylrnd(repmat(v_rayl,1,N));
             s = amp.*exp(1i*phase);
             
             % position in the beam
-            count = 1;
-            theta = zeros(1,N);
-            while count <= N
-                xx = rand(1);
-                yy = rand(1);
-                zz = rand(1);
-                if sqrt(xx.^2+yy.^2+zz.^2)<1
-                    xy = sqrt(xx.^2+yy.^2);
-                    theta(count) = atan(xy./(zz));
-                    count = count +1;
-                end
-            end
+            u = unifrnd(0,1,1,sum(N));
+            theta = acos(u);  % polar angle wrt beam axis
             b = (2*besselj(1,ka*sin(theta))./(ka*sin(theta))).^2;
             
             % E=SB

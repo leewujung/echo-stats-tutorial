@@ -40,7 +40,7 @@ if mc_opt
         param.ka = ka;
 
         env_bp1_2D = zeros(pingnum,1);
-        for iP = 1:pingnum
+        parfor iP = 1:pingnum
             phase = rand(1,Ns)*2*pi;
             amp = ones(1,Ns);
             s = amp.*exp(1i*phase);

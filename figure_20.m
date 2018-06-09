@@ -76,18 +76,8 @@ if mc_opt
                         s1 = amp.*exp(1i*phase);
                         
                         % position in the beam
-                        count = 1;
-                        theta = zeros(1,Nw_sl);
-                        while count <= Nw_sl
-                            xx = rand(1);
-                            yy = rand(1);
-                            zz = rand(1);
-                            if sqrt(xx.^2+yy.^2+zz.^2)<1
-                                xy = sqrt(xx.^2+yy.^2);
-                                theta(count) = atan(xy./(zz));
-                                count = count +1;
-                            end
-                        end
+                        u = unifrnd(0,1,1,sum(Nw_sl));
+                        theta = acos(u);  % polar angle wrt beam axis
                         b1 = (2*besselj(1,ka_sl*sin(theta))./(ka_sl*sin(theta))).^2;
                         
                         % E=SB
@@ -104,18 +94,8 @@ if mc_opt
                         s2 = amp.*exp(1i*phase);
                         
                         % position in the beam
-                        count = 1;
-                        theta = zeros(1,Ns_sl);
-                        while count <= Ns_sl
-                            xx = rand(1);
-                            yy = rand(1);
-                            zz = rand(1);
-                            if sqrt(xx.^2+yy.^2+zz.^2)<1
-                                xy = sqrt(xx.^2+yy.^2);
-                                theta(count) = atan(xy./(zz));
-                                count = count +1;
-                            end
-                        end
+                        u = unifrnd(0,1,1,sum(Ns_sl));
+                        theta = acos(u);  % polar angle wrt beam axis
                         b2 = (2*besselj(1,ka_sl*sin(theta))./(ka_sl*sin(theta))).^2;
                         
                         % E=SB
