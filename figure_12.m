@@ -4,6 +4,8 @@
 %
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
+clear
+
 addpath './util_fcn'
 save_base_path = './figs';
 
@@ -16,7 +18,9 @@ end
 
 % Narrow down ka values and save results for later use. The section below
 % is only evaluated once
-if ~exist(sprintf('./figs/%s/%s_ka_num.mat',script_name),'file')
+if ~exist(sprintf('./figs/%s/%s_ka_num.mat',script_name,script_name),'file')
+    disp('Finding fine ka values...')
+
     ka = 6.65:1e-2:6.7;
     theta_deg = 9.5:1e-3:10.5;
     theta = theta_deg/180*pi;
@@ -122,7 +126,9 @@ end
 
 
 % Plot pb
-if ~exist(sprintf('./figs/%s/%s_p_pb.mat',script_name),'file')
+if ~exist(sprintf('./figs/%s/%s_b_pb.mat',script_name,script_name),'file')
+    disp('Calculating pb(b), this is gonna take a while...')
+    
     b_num = 5e4;
     b_start_log = -7;
     b_end_log = 0;
