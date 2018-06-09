@@ -5,8 +5,6 @@
 %
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
-% 2017 01 01  Rayleigh scatterer with and without beampattern, PDF & PFA
-% 2017 04 12  Update figure legend, axis labels, and curve style
 
 clear
 addpath './util_fcn'
@@ -44,6 +42,7 @@ mc_opt = 1;  % 0 - do not re-generate realizations
 if mc_opt
     for iN=1:length(N_all)
         Ns = N_all(iN);
+        fprintf('Ns = %d\n',Ns);
         
         param.N = Ns;
         param.ka = ka;
@@ -110,7 +109,7 @@ ylim([1e-6 1e3]);
 save_fname = sprintf('%s_ka%2.4f_smpl%s_pdf_bp1',...
     str,ka,pingnum_str);
 saveas(fig,[fullfile(save_path,save_fname),'.fig'],'fig');
-saveSameSize_100(fig,'file',[fullfile(save_path,save_fname),'.png'],...
+saveSameSize(fig,'file',[fullfile(save_path,save_fname),'.png'],...
     'format','png');
 
 
