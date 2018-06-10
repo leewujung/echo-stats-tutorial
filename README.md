@@ -2,9 +2,9 @@
 
 This is a compilation of code used for generating figures in the paper: **Echo statistics associated with discrete scatterers: A tutorial on physics-based methods**. The authors of this paper are [Timothy K. Stanton](https://www.whoi.edu/profile/tstanton/) ([@timstanton99](https://github.com/timstanton99)), [Wu-Jung Lee](https://leewujung.github.io/) ([@leewujung](https://github.com/leewujung)), and [Kyungmin Baik](mailto:kbaik@kriss.re.kr) ([@nupho27](https://github.com/nupho27)). @leewujung and @nupho27 jointly contribute to this repository. The paper is re-submitted to the Journal of the Acoustical Society of America (JASA) after the first round of review and a PDF copy will be uploaded here once accepted.
 
-## Using the code
+## To use the code
 
-### To get the code
+### Getting a copy
 You can get a copy of the code in the following ways:
   1. Download the whole repo as a zip file using the "Clone or download" button on the top-right corner of this page
   2. Use `git clone --recurse-submodules https://github.com/leewujung/echo_stat_tutorial` to clone this repo to your local machine.
