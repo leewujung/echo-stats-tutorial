@@ -6,10 +6,6 @@
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
 
-% 2017 01 01  Echo pdf of 100 Rayleigh scatterers observed using different
-%             beamwidth
-% 2017 04 12  Update figure legend, axis labels, and curve style
-
 
 clear
 addpath './util_fcn'
