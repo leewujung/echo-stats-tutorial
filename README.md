@@ -4,6 +4,7 @@ This is a compilation of code used for generating figures in the paper: **Echo s
 
 ## To use the code
 
+### Get the code
 You can get a copy of the code in the following ways:
   1. Download the whole repo as a zip file using the "Clone or download" button on the top-right corner of this page
   2. Use `git clone --recurse-submodules https://github.com/leewujung/echo_stat_tutorial` to clone this repo to your local machine.
