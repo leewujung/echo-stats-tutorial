@@ -24,7 +24,7 @@ ka = X.ka_3deg;
 pingnum_str = '1e8';
 pingnum = eval(pingnum_str);
 
-N_all = [1,10,100,1000];
+N_all = [1,10,100,1000,2:4];
 v_rayl = 1/sqrt(2);
 
 % Set operation
@@ -35,6 +35,7 @@ mc_opt = 1;  % 0 - do not re-generate realizations
 if mc_opt
     for iN=1:length(N_all)
         Ns = N_all(iN);
+        fprintf('Ns = %d\n',Ns);
         
         param.N = Ns;
         param.ka = ka;
@@ -113,7 +114,7 @@ ylim([1e-6 1e3]);
 save_fname = sprintf('%s_smpl%s_ka%2.4f_pdf_bp1',...
     str,pingnum_str,ka);
 saveas(fig,[fullfile(save_path,save_fname),'.fig'],'fig');
-saveSameSize_100(fig,'file',[fullfile(save_path,save_fname),'.png'],...
+saveSameSize(fig,'file',[fullfile(save_path,save_fname),'.png'],...
     'format','png');
 
 
@@ -161,7 +162,7 @@ ylim([1e-4 1e1]);
 save_fname = sprintf('%s_smpl%s_ka%2.4f_pfa_bp1',...
     str,pingnum_str,ka);
 saveas(fig,[fullfile(save_path,save_fname),'.fig'],'fig');
-saveSameSize_100(fig,'file',[fullfile(save_path,save_fname),'.png'],...
+saveSameSize(fig,'file',[fullfile(save_path,save_fname),'.png'],...
     'format','png');
 
 
