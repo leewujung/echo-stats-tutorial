@@ -27,8 +27,17 @@ pingnum = eval(pingnum_str);
 N_all = 1;
 v_rayl = 1/sqrt(2);
 
+% Check if figure_15 results are already in place
+% If not ask users to run it first
+if ~exist('./figs/figure_15/pnum_1e8_ka44.2511_N0001_bp1.mat','file')
+    disp(['Run figure_15 first to obtain necessary simulation for ' ...
+          'plotting this figure!'])
+    return
+end
+
+
 % Set operation
-mc_opt = 1;  % 0 - do not re-generate realizations
+mc_opt = 0;  % 0 - do not re-generate realizations
              % 1 - re-generate all realizations
 
 % Monte Carlo simulation
@@ -47,7 +56,8 @@ if mc_opt
 
             % position in 2D beam
             theta_2D = rand(1,Ns)*pi/2;
-            b_bp1_2D = (2*besselj(1,ka*sin(theta_2D))./(ka*sin(theta_2D))).^2;
+            b_bp1_2D = (2*besselj(1,ka*sin(theta_2D))./ ...
+                        (ka*sin(theta_2D))).^2;
 
             % E=SB
             e_bp1_2D = s.*b_bp1_2D;
@@ -87,7 +97,7 @@ for iN=1:length(N_all)
 
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_bp1_2D.mat',...
         pingnum_str,ka,N_all(iN));
-    E = load(fullfile(base_path,save_path,simu_file));
+    E = load(fullfile(save_path,simu_file));
     [x_2D,p_x_2D] = findEchoDist(E.env,1200);
 %     [x_2D,p_x_2D] = findEchoDist(E.env/sqrt(mean(E.env.^2)),1200);
 %     cdf_x_2D = cumtrapz(x_2D,p_x_2D);
@@ -110,8 +120,8 @@ ylim([1e-4 1e5]);
 
 save_fname = sprintf('%s_smpl%s_ka%2.4f_pdf',...
     str,pingnum_str,ka);
-saveas(fig,[fullfile(base_path,save_path,save_fname),'.fig'],'fig');
-saveSameSize(fig,'file',[fullfile(base_path,save_path,save_fname),'.png'],...
+saveas(fig,[fullfile(save_path,save_fname),'.fig'],'fig');
+saveSameSize(fig,'file',[fullfile(save_path,save_fname),'.png'],...
     'format','png');
 
 
