@@ -6,11 +6,6 @@
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
 
-% 2016 10 26  Simulation for interspersed echo pdf
-% 2016 11 01  Simulation for split echo pdf
-% 2017 04 13  Update figure legend, axis labels, and curve style
-
-
 clear
 addpath './util_fcn'
 base_path = './figs';
@@ -28,11 +23,11 @@ X = load('./figs/figure_12/figure_12_ka_num.mat');
 ka = X.ka_3deg;
 
 A = 0.05;
-M_all = 20;
+M_all = [5,20];
 Nw_all = 2500;
 Ns_all = [25,250,2500];%,20,50,500];
 v_rayl1 = 1/sqrt(2);
-pingnum_str = '1e3';
+pingnum_str = '1e7';
 pingnum = eval(pingnum_str);
 
 npt = 120;  % number of points for pe kde estimation
@@ -45,12 +40,13 @@ mc_opt = 1;  % 0 - do not re-generate realizations
 
 % Monte Carlo simulation
 if mc_opt
-    for iS = 1:length(M_all)
-        v_rayl2 = M_all(iS)/sqrt(2);
-        param.M = M_all(iS);
+    for iM = 1%:length(M_all)
+        v_rayl2 = M_all(iM)/sqrt(2);
+        param.M = M_all(iM);
         disp(['M=',num2str(param.M)]);
         
         for iKA = 1:length(ka)
+            disp(['ka=',num2str(ka(iKA))]);
             for iNw = 1:length(Nw_all)                
                 for iNs = 1:length(Ns_all)
                     tic
@@ -61,6 +57,8 @@ if mc_opt
                     param.Ns = Ns_sl;
                     param.Nw = Nw_all(iNw);
                     param.A  = A;
+
+                    fprintf('Ns=%d, Nw=%d\n',Ns_sl,Nw_sl);
                     
                     pingnum1 = pingnum*(1-param.A);
                     pingnum2 = pingnum*param.A;
