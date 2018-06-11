@@ -47,6 +47,8 @@ else
     x = mean([edges(1:end-1);edges(2:end)],1);
 end
 
+data = data(:)';
+
 hitnum = histc(data,edges);
 y = hitnum(1:end-1)./diff(edges);
 y = y/trapz(x,y);
