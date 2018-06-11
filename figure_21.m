@@ -40,7 +40,7 @@ mc_opt = 1;  % 0 - do not re-generate realizations
 
 % Monte Carlo simulation
 if mc_opt
-    for iM = 1 %:length(M_all)
+    for iM = 1:length(M_all)
         disp(['M=',num2str(M_all(iM))]);
         v_rayl2 = M_all(iM)/sqrt(2);
         param.M = M_all(iM);
