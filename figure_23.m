@@ -43,7 +43,7 @@ end
 % Set overall params
 N = [25,250,2500];
 mix_r = ones(length(N),1);
-num_sample_str = '5e5';
+num_sample_str = '1e6';
 num_sample = eval(num_sample_str);
 save_file_pre = 'rayleigh';
 
