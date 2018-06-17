@@ -1,4 +1,7 @@
-% This code plots the PDF of K-distribution in normalized quantity
+% This code plots the PDF of K-distribution in normalized quantity.
+% The equation used in the code below is mathematically equivalent
+% to eq.(29) in the paper, although they are slightly different in
+% form.
 % Written by BAIK, Kyungmin. 11/14/2016
 
 clear

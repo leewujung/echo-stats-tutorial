@@ -1,4 +1,7 @@
 % This code is for the creation of Fig. 9(b) in the tutorial.
+% The equation used in the code below is mathematically
+% equivalent to eq.(30) in the paper, although they are different
+% in form. 
 % Written by BAIK, Kyungmin. 10/18/206
 
 clear
