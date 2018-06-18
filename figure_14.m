@@ -1,7 +1,9 @@
 % This code is for the creation of Fig. 14 in the tutorial.
 % Written by BAIK, Kyungmin. 10/18/206
 
-clear
+clear all
+close all
+
 t0=clock;
 
 N=1e4;
@@ -25,7 +27,7 @@ figure(1)
 Nfac=sqrt(trapz(b,(b.^2).*PDF)); % normalization factor for fs
 bran=b/Nfac;
 PDFnorm=PDF/trapz(bran,PDF);
-loglog(bran,PDFnorm,'r','LineWidth',1)
+loglog(bran,PDFnorm,'k','LineWidth',1)
 
 hold on
 
@@ -35,7 +37,7 @@ PFA=zeros(size(PDFnorm)-1);
 for m=1:N-1
     PFA(m)=trapz(bran(m:N),PDFnorm(m:N));
 end
-loglog((bran(1:N-1)+bran(2:N))/2,PFA,'r','LineWidth',1)
+loglog((bran(1:N-1)+bran(2:N))/2,PFA,'k','LineWidth',1)
 hold on
 
 ae=0.1; % radius of equal volume of sphere in m
@@ -65,7 +67,7 @@ Nfac=sqrt(trapz(Ftotal,(Ftotal.^2).*PDFtotal)); % normalization factor for fs
 
 % PDF of Rayleigh scatterer combined with beampattern PDF
 figure (1)
-loglog(Ftotal/Nfac,PDFtotal/trapz(Ftotal/Nfac,PDFtotal),'r','LineWidth',2)
+loglog(Ftotal/Nfac,PDFtotal/trapz(Ftotal/Nfac,PDFtotal),'b','LineWidth',2)
 axis([1e-2 1e2 1e-6 1e4])
 
 % PFA of Rayleigh scatterer combined with beampattern PDF
@@ -74,7 +76,7 @@ PFA=zeros(size(PDFtotal)-1);
 for m=1:NT-1
     PFA(m)=trapz(Ftotal(m:NT)/Nfac,PDFtotal(m:NT)/trapz(Ftotal/Nfac,PDFtotal));
 end
-loglog((Ftotal(1:NT-1)+Ftotal(2:NT))/(2*Nfac),PFA,'r','LineWidth',2)
+loglog((Ftotal(1:NT-1)+Ftotal(2:NT))/(2*Nfac),PFA,'b','LineWidth',2)
 axis([1e-2 1e2 1e-10 1e0])
 
 
@@ -152,6 +154,10 @@ Nfac=sqrt(trapz(Ftotal,(Ftotal.^2).*PDFtotal)); % normalization factor for fs
 figure(1)
 loglog(Ftotal/Nfac,PDFtotal/trapz(Ftotal/Nfac,PDFtotal),'r','LineWidth',2)
 
+% Add Rayleigh PDF
+loglog(Fray,2*Fray.*exp(-1*(Fray.^2)),'k','LineWidth',2)
+axis([1e-4 1e2 1e-6 1e5])
+
 % PFA of Rough spheroid combined with beampattern PDF in 2D
 figure(2)
 clear PFA
@@ -161,11 +167,10 @@ for m=1:NT-1
 end
 loglog((Ftotal(1:NT-1)+Ftotal(2:NT))/(2*Nfac),PFA,'r','LineWidth',2)
 
+% Add Rayleigh PFA
+loglog(Fray,exp(-1*(Fray.^2)),'k','LineWidth',2)
+legend('Point scatterer','Rayleigh scatterer (1:1)','Smooth 10:1 prolate spheroid','Rough 10:1 prolate spheroid')
+axis([1e-4 1e2 1e-3 1e1])
+
 
 eval(['disp(''total  ',num2str(etime(clock,t0)),' seconds elapsed'');'])
-% legend('10:1','5:1','2:1','1:1')
-% axis([1e-3 1e2 1e-6 1e3])
-% grid on
-% 
-% xlabel('|{\it f_{ss}}|/<|{\it f_{ss}}|^2>^{1/2}','FontSize',14)
-% ylabel('{\it p_{ss}}(|{\it f_{ss}}|)','FontSize',14)

@@ -1,36 +1,55 @@
 % This code plots the Rice PDF in normalized quantity
 % Written by BAIK, Kyungmin. 11/14/2016
 
-clear
+clear all
+close all
 
-Gamma=input('Enter the power signal-to-noise ratio: ');
+%Gamma=input('Enter the power signal-to-noise ratio: ');
 X=logspace(-5,3,1e6);
 
+Gamma=0;
 PDF=2*(1+Gamma)*X.*exp(-((1+Gamma)*(X.^2)+Gamma)).*besseli(0,2*sqrt(Gamma*(1+Gamma))*X);
+figure(1)
+plot(X,PDF,'k-','LineWidth',2)
+hold on
+figure(2)
+loglog(X,PDF,'k-','LineWidth',2)
+hold on
 
-%figure
+Gamma=0.5;
+PDF=2*(1+Gamma)*X.*exp(-((1+Gamma)*(X.^2)+Gamma)).*besseli(0,2*sqrt(Gamma*(1+Gamma))*X);
+figure(1)
+plot(X,PDF,'k-','LineWidth',1)
+figure(2)
+loglog(X,PDF,'k-','LineWidth',1)
+
+Gamma=1;
+PDF=2*(1+Gamma)*X.*exp(-((1+Gamma)*(X.^2)+Gamma)).*besseli(0,2*sqrt(Gamma*(1+Gamma))*X);
+figure(1)
+plot(X,PDF,'b-','LineWidth',1)
+figure(2)
+loglog(X,PDF,'b-','LineWidth',1)
+
+Gamma=2;
+PDF=2*(1+Gamma)*X.*exp(-((1+Gamma)*(X.^2)+Gamma)).*besseli(0,2*sqrt(Gamma*(1+Gamma))*X);
+figure(1)
+plot(X,PDF,'b-','LineWidth',2)
+figure(2)
+loglog(X,PDF,'b-','LineWidth',2)
+
+Gamma=5;
+PDF=2*(1+Gamma)*X.*exp(-((1+Gamma)*(X.^2)+Gamma)).*besseli(0,2*sqrt(Gamma*(1+Gamma))*X);
+figure(1)
+plot(X,PDF,'g-','LineWidth',2)
+figure(2)
+loglog(X,PDF,'g-','LineWidth',2)
+
+Gamma=10;
+PDF=2*(1+Gamma)*X.*exp(-((1+Gamma)*(X.^2)+Gamma)).*besseli(0,2*sqrt(Gamma*(1+Gamma))*X);
+figure(1)
 plot(X,PDF,'r-','LineWidth',2)
-% dashline(X,PDF,'k-',2,1,2,1,'LineWidth',1)
-% axis([0 3 0 2])
-% grid on
-% xlabel('|A|/<|A|^2>^{1/2} ','FontSize',12)
-% ylabel('Probability Density Function','FontSize',12)
-% title('Rice Distribution','FontSize',12)
-
-
-% figure
-%loglog(X,PDF,'r-','LineWidth',2)
-%dashline(X,PDF,2,1,2,1,'k-','LineWidth',1)
-%axis([1e-2 1e2 1e-6 1e4])
-%grid on
-%xlabel('|A|/<|A|^2>^{1/2} ','FontSize',12)
-%ylabel('Probability Density Function','FontSize',12)
-%title('Rice Distribution','FontSize',12)
-
-
-
-%xlabel('|e_{sys}|/<|e_{sys}|^2>^{1/2} ','FontSize',12)
-%ylabel('Probability Density Function','FontSize',12)
-
-%xlabel('A_{norm} ','FontSize',12)
-%ylabel('p_{C,norm}(A_{norm})','FontSize',12)
+axis([0 3 0 2])
+legend('\gamma=0 (Rayleigh)','\gamma=0.5','\gamma=1','\gamma=2','\gamma=5','\gamma=10')
+figure(2)
+loglog(X,PDF,'r-','LineWidth',2)
+axis([1e-2 1e1 1e-6 1e2])
