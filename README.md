@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1313729.svg)](https://doi.org/10.5281/zenodo.1313729)
+
 ## Brief introduction
 
 This is a compilation of code used for generating figures in the paper: **Echo statistics associated with discrete scatterers: A tutorial on physics-based methods**. The authors of this paper are [Timothy K. Stanton](https://www.whoi.edu/profile/tstanton/) ([@timstanton99](https://github.com/timstanton99)), [Wu-Jung Lee](https://leewujung.github.io/) ([@leewujung](https://github.com/leewujung)), and [Kyungmin Baik](mailto:kbaik@kriss.re.kr) ([@nupho27](https://github.com/nupho27)). @leewujung and @nupho27 jointly contribute to this repository. The paper is re-submitted to the Journal of the Acoustical Society of America (JASA) after the first round of review and a PDF copy will be uploaded here once accepted.
