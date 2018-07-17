@@ -22,4 +22,4 @@ You can get a copy of the code in the following ways:
 
 4. `figure_13` uses results from `figure_15`, so don't be alarmed if you get a warning asking you to run it first.
 
-5. In the header of figures 12-18, 20, 21, and 23, the note "3D distribution of scatterers" indicates that the scatterers are randomly and uniformly distributed within a thin hemispherical shell (half-space), and the note "2D distribution of scatterers" indicates that the scatterers are randomly and uniformly distributed within a thin arc of constant radius in the half-plane containing the MRA of the beam. See Sec. VII.A.2. in the paper for  detail.
+5. In the header of the code that generate figures 12-18, 20, 21, and 23, the note "3D distribution of scatterers" indicates that the scatterers are randomly and uniformly distributed within a thin hemispherical shell (half-space), and the note "2D distribution of scatterers" indicates that the scatterers are randomly and uniformly distributed within a thin arc of constant radius in the half-plane containing the MRA of the beam. See Sec. VII.A.2. in the paper for  detail.
