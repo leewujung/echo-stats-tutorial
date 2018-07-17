@@ -1,8 +1,12 @@
-% This code plots the PDF of K-distribution in normalized quantity.
-% The equation used in the code below is mathematically equivalent
-% to eq.(29) in the paper, although they are slightly different in
+% Code to generate Figure 8 of the echo statistics tutorial
+%
+% This code plots the K PDF on both a lin-lin and log-log scale.
+% The equation used in the code is mathematically equivalent
+% to Eq. (29) in the paper, although it is slightly different in
 % form.
-% Written by BAIK, Kyungmin. 11/14/2016
+%
+% Author:  Kyungmin Baik | kbaik@kriss.re.kr | KRISS
+
 
 clear all
 close all

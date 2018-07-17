@@ -1,8 +1,12 @@
-% This code is for the creation of Fig. 10(a) in the tutorial.
-% The equations used in the code below aer mathematically
-% equivalent to eq.(33) and eq.(35) in the paper, although they are
-% different in form. 
-% Written by BAIK, Kyungmin. 10/18/206
+% Code to generate Figure 10a of the echo statistics tutorial
+%
+% This code plots the PDF of the magnitude of the backscattering amplitude
+% for the randomly oriented smooth prolate spheroid. The equations used in
+% the code are mathematically equivalent to Eqs. (33) and (34) in the paper,
+% although they are different in form.
+%
+% Author:  Kyungmin Baik | kbaik@kriss.re.kr | KRISS
+
 
 clear
 ae=0.1; % radius of equal volume of sphere in m

@@ -1,8 +1,12 @@
-% This code is for the creation of Fig. 9(b) in the tutorial.
-% The equation used in the code below is mathematically
-% equivalent to eq.(30) in the paper, although they are different
-% in form. 
-% Written by BAIK, Kyungmin. 10/18/206
+% Code to generate Figure 9b of the echo statistics tutorial
+%
+% This code plots the magnitude of the backscattering amplitude of the
+% impenetrable smooth prolate spheroid. The equation used in the code is
+% mathematically equivalent to Eq. (30) in the paper, although it is
+% different in form.
+%
+% Author:  Kyungmin Baik | kbaik@kriss.re.kr | KRISS
+
 
 clear
 ae=0.1; % radius of equal volume of sphere in m

@@ -1,12 +1,16 @@
 % Code to generate Figure 23 of the echo statistics tutorial.
-% This figure shows the comparisons between PDFs of echo magnitudes
+%
+% This code plots comparisons between PDFs of the echo magnitudes
 % associated with long narrowband and short-pulsed broadband signals.
+% The N identical Rayleigh scatterers are randomly distributed in the
+% sensor beam.
+% 3D distribution of scatterers.
 %
 % Package 'broadband-echo-stats' is used to generate the ensemble of
 % samples for both narrowband and broadband echo pdfs for this comparison
 % figure. This package is located at: https://github.com/leewujung/broadband-echo-stats
 % If you have cloned this code from GitHub this package is included as a
-% submodule. To make sure you have the code, run 
+% submodule. To make sure you have the code, run
 %     git submodule init
 % and then
 %     git submodule update
@@ -80,7 +84,7 @@ if mc_opt
         sfname = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_nb.mat',...
                 save_file_pre,N(iN),mix_r(iN),num_sample_str,param.gate_len);
         save([save_path,'/',sfname],'param','s');
-    end    
+    end
 end
 
 
@@ -93,7 +97,7 @@ for iN=1:length(N)
     rayl = raylpdf(xr,1/sqrt(2));
     loglog(xr,rayl,'k','linewidth',2);
     hold on
-    
+
     % Load narrowband file
     simu_file = sprintf('%s_N_%04d_r_%02d_pnum%s_glen%2.2f_nb.mat',...
         'rayleigh',N(iN),1,num_sample_str,param.gate_len);
@@ -113,7 +117,7 @@ for iN=1:length(N)
     % misc
     title(sprintf('N=%d, a=0.211m, smplN=%s',N(iN),num_sample_str),...
         'fontsize',18);
-    
+
     ll = legend('Rayleigh','Narrowband','Broadband',...
         'location','southwest');
     set(ll,'fontsize',18);
@@ -131,4 +135,3 @@ for iN=1:length(N)
         'format','png');
 
 end
-

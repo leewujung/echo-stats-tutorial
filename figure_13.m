@@ -1,6 +1,7 @@
 % Code to generate Figure 13 of the echo statistics tutorial.
-% This figure shows beampattern PDF associated with a circular aperture for
-% 3D and 2D distributions of scatterers 
+%
+% This code plots the beampattern PDF associated with a circular aperture for
+% 2D and 3D distributions of scatterers
 %
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
@@ -41,7 +42,7 @@ mc_opt = 0;  % 0 - do not re-generate realizations
              % 1 - re-generate all realizations
 
 % Monte Carlo simulation
-if mc_opt 
+if mc_opt
     for iN=1:length(N_all)
         Ns = N_all(iN);
 
@@ -81,7 +82,7 @@ fig = figure;
 xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
 
-for iN=1:length(N_all)    
+for iN=1:length(N_all)
     simu_file_3D = sprintf('pnum_%s_ka%2.4f_N%04d_bp1.mat',...
         pingnum_str,ka,N_all(iN));
     E = load(fullfile(base_path,save_path_3D,simu_file_3D));
@@ -90,7 +91,7 @@ for iN=1:length(N_all)
 %     cdf_x_3D = cumtrapz(x_3D,p_x_3D);
 %     pfa_x_3D = 1-cdf_x_3D;
 %     loglog(x_3D,pfa_x_3D,'-','linewidth',1);
-    loglog(x_3D,p_x_3D,'k-','linewidth',2);   
+    loglog(x_3D,p_x_3D,'k-','linewidth',2);
     clear E
 
     hold on
@@ -105,7 +106,7 @@ for iN=1:length(N_all)
 %     loglog(x_2D,pfa_x_2D,'-','linewidth',1);
     loglog(x_2D,p_x_2D,'k--');
     clear E
-    
+
 end
 set(gca,'fontsize',16)
 ylabel('$p_b(b)$','Interpreter','LaTex','fontsize',24);
@@ -126,14 +127,14 @@ saveSameSize(fig,'file',[fullfile(save_path,save_fname),'.png'],...
 
 
 
-% 
+%
 % % Plot: PFA WITH BEAMPATTERN
 % fig = figure;
 % xr = logspace(-3,log10(2000),500);  % standard
 % rayl = raylpdf(xr,1/sqrt(2));
 % loglog(xr,rayl,'k','linewidth',1);
 % hold on
-% for iN=1:length(N_all)    
+% for iN=1:length(N_all)
 %     simu_file_3D = sprintf('pnum_%s_ka%2.4f_N%04d_bp1.mat',...
 %         pingnum_str,ka,N_all(iN));
 %     E = load(fullfile(base_path,save_path_3D,simu_file_3D));
@@ -164,7 +165,7 @@ saveSameSize(fig,'file',[fullfile(save_path,save_fname),'.png'],...
 % set(gca,'fontsize',14)
 % xlim([1e-3 1e2]);
 % ylim([1e-6 1e3]);
-% 
+%
 % save_fname = sprintf('%s_smpl%s_ka%2.4f_pfa',...
 %     str,pingnum_str,ka);
 % saveas(fig,[fullfile(base_path,save_path,save_fname),'.fig'],'fig');

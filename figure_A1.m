@@ -1,4 +1,10 @@
-% This code creates 6 common PDFs in one figure in linear or log scale
+% Code to generate Figure A1 of the echo statistics tutorial
+%
+% This code plots 6 common (“generic”) PDFs in one figure on a lin-lin scale.
+% The Rayleigh PDF is given in each panel for comparison.
+%
+% Author:  Kyungmin Baik | kbaik@kriss.re.kr | KRISS
+
 
 clear
 
@@ -170,4 +176,3 @@ plot(X(PDF>0),PDF(PDF>0),'r--','LineWidth',2)
 plot(X,2*X.*exp(-X.^2),'k','LineWidth',2)
 legend('\rho=-2','\rho=-1','\rho=-1/2','\rho=0','\rho=1/3','Rayleigh')
 axis([0 3 0 3])
-

@@ -1,8 +1,10 @@
 % Code to generate Figure 12 of the echo statistics tutorial
-% This figure shows beampattern PDF associated with circular apertures of
-% varying size and/or frequency 
+%
+% This code plots the beampattern PDF associated with circular apertures of
+% varying size and/or frequency for 3D distribution of scatterers.
 %
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
+
 
 clear
 
@@ -26,13 +28,13 @@ if ~exist(sprintf('./figs/%s/%s_ka_num.mat',script_name,script_name),'file')
     theta = theta_deg/180*pi;
     btheta = (2*besselj(1,ka'*sin(theta))./(ka'*sin(theta))).^2;
     btheta_log = 20*log10(btheta);
-    
+
     figure
     plot(theta/pi*180,btheta_log)
     xlabel('Polar angle (^o)');
     ylabel('2-way beampattern');
     grid
-    
+
     % Full beamwidth 1 deg
     ka = 132.7:1e-5:132.8;
     theta_deg_want = 0.5;
@@ -40,16 +42,16 @@ if ~exist(sprintf('./figs/%s/%s_ka_num.mat',script_name,script_name),'file')
     theta = theta_deg/180*pi;
     btheta = (2*besselj(1,ka'*sin(theta))./(ka'*sin(theta))).^2;
     btheta_log = 20*log10(btheta);
-    
+
     [~,idx_3db] = min(abs(btheta_log-(-3)),[],2);
     [~,idx_ka] = min(abs(theta_deg(idx_3db)-theta_deg_want));
-    
+
     ka_want = ka(idx_ka);
     btheta_want = (2*besselj(1,ka_want'*sin(theta))./(ka_want'*sin(theta))).^2;
-    
+
     ka_1deg = ka_want;
-    
-    
+
+
     % Full beamwidth 5 deg
     ka = 26.5:1e-5:26.6;
     theta_deg_want = 2.5;
@@ -57,16 +59,16 @@ if ~exist(sprintf('./figs/%s/%s_ka_num.mat',script_name,script_name),'file')
     theta = theta_deg/180*pi;
     btheta = (2*besselj(1,ka'*sin(theta))./(ka'*sin(theta))).^2;
     btheta_log = 20*log10(btheta);
-    
+
     [~,idx_3db] = min(abs(btheta_log-(-3)),[],2);
     [~,idx_ka] = min(abs(theta_deg(idx_3db)-theta_deg_want));
-    
+
     ka_want = ka(idx_ka);
     btheta_want = (2*besselj(1,ka_want'*sin(theta))./(ka_want'*sin(theta))).^2;
-    
+
     ka_5deg = ka_want;
-    
-    
+
+
     % Full beamwidth 10 deg
     ka = 13.2:1e-5:13.3;
     theta_deg_want = 5;
@@ -74,16 +76,16 @@ if ~exist(sprintf('./figs/%s/%s_ka_num.mat',script_name,script_name),'file')
     theta = theta_deg/180*pi;
     btheta = (2*besselj(1,ka'*sin(theta))./(ka'*sin(theta))).^2;
     btheta_log = 20*log10(btheta);
-    
+
     [~,idx_3db] = min(abs(btheta_log-(-3)),[],2);
     [~,idx_ka] = min(abs(theta_deg(idx_3db)-theta_deg_want));
-    
+
     ka_want = ka(idx_ka);
     btheta_want = (2*besselj(1,ka_want'*sin(theta))./(ka_want'*sin(theta))).^2;
-    
+
     ka_10deg = ka_want;
-    
-    
+
+
     % Full beamwidth 3 deg
     ka = 44.2:1e-5:44.3;
     theta_deg_want = 1.5;
@@ -91,16 +93,16 @@ if ~exist(sprintf('./figs/%s/%s_ka_num.mat',script_name,script_name),'file')
     theta = theta_deg/180*pi;
     btheta = (2*besselj(1,ka'*sin(theta))./(ka'*sin(theta))).^2;
     btheta_log = 20*log10(btheta);
-    
+
     [~,idx_3db] = min(abs(btheta_log-(-3)),[],2);
     [~,idx_ka] = min(abs(theta_deg(idx_3db)-theta_deg_want));
-    
+
     ka_want = ka(idx_ka);
     btheta_want = (2*besselj(1,ka_want'*sin(theta))./(ka_want'*sin(theta))).^2;
-    
+
     ka_3deg = ka_want;
-    
-    
+
+
      % Full beamwidth 20 deg
     ka = 6.65:1e-5:6.7;
     theta_deg_want = 10;
@@ -108,27 +110,27 @@ if ~exist(sprintf('./figs/%s/%s_ka_num.mat',script_name,script_name),'file')
     theta = theta_deg/180*pi;
     btheta = (2*besselj(1,ka'*sin(theta))./(ka'*sin(theta))).^2;
     btheta_log = 20*log10(btheta);
-    
+
     [~,idx_3db] = min(abs(btheta_log-(-3)),[],2);
     [~,idx_ka] = min(abs(theta_deg(idx_3db)-theta_deg_want));
-    
+
     ka_want = ka(idx_ka);
     btheta_want = (2*besselj(1,ka_want'*sin(theta))./(ka_want'*sin(theta))).^2;
-    
+
     ka_20deg = ka_want;
-    
-    
+
+
     % Save ka numbers
     save(fullfile(save_path,[script_name,'_ka_num.mat']),...
         'ka_*deg');
-    
+
 end
 
 
 % Plot pb
 if ~exist(sprintf('./figs/%s/%s_b_pb.mat',script_name,script_name),'file')
     disp('Calculating pb(b), this is gonna take a while...')
-    
+
     b_num = 5e4;
     b_start_log = -7;
     b_end_log = 0;
@@ -137,7 +139,7 @@ if ~exist(sprintf('./figs/%s/%s_b_pb.mat',script_name,script_name),'file')
     [b_5deg,pb_5deg] = calc_pb_log(ka_5deg,b_start_log,b_end_log,b_num);
     [b_10deg,pb_10deg] = calc_pb_log(ka_10deg,b_start_log,b_end_log,b_num);
     % [b_20deg,pb_20deg] = calc_pb_log(ka_20deg,b_start_log,b_end_log,b_num);
-    
+
     save(fullfile(save_path,[script_name,'_b_pb.mat']),...
         'b_*deg','pb_*deg');
 else
@@ -247,6 +249,3 @@ legend('20^o beam','10^o beam','5^o beam','3^o beam','1^o beam');
 saveas(gcf,fullfile(save_path,[script_name,'_bp_all.fig']),'fig');
 saveSameSize(gcf,'file',fullfile(save_path,[script_name,'_bp_all.png']),...
     'format','png','renderer','painters');
-
-
-

@@ -18,8 +18,8 @@ You can get a copy of the code in the following ways:
 
 2. Outputs from `figure_12.m` are used in many later code, so make sure to run this first.
 
-3. Many of these take _a while_ to run because the Monte Carlo simulation samples are generated on the fly by default (and we are taking a brute force approach here for simplicity). You can opt out the simulation part by changing a flag (`mc_opt`) in the code to plot pre-calculated samples. This applies to the following figures: 13, 15-18, 20-21, 23.
+3. Many of these take _a while_ to run because the Monte Carlo simulation samples are generated on the fly by default (and we are taking a brute force approach here for simplicity). You can opt out of the simulation part by changing a flag (`mc_opt`) in the code to plot pre-calculated samples. This applies to the following figures: 13, 15-18, 20, 21, and 23.
 
 4. `figure_13` uses results from `figure_15`, so don't be alarmed if you get a warning asking you to run it first.
 
-
+5. In the header of figures 12-18, 20, 21, and 23, the note "3D distribution of scatterers" indicates that the scatterers are randomly and uniformly distributed within a thin hemispherical shell (half-space), and the note "2D distribution of scatterers" indicates that the scatterers are randomly and uniformly distributed within a thin arc of constant radius in the half-plane containing the MRA of the beam. See Sec. VII.A.2. in the paper for  detail.

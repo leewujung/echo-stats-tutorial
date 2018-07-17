@@ -1,7 +1,8 @@
 % Code to generate Figure 16 of the echo statistics tutorial.
-% This figure shows distributions of magnitude of echo in backscatter
-% direction from N identical Rayleigh scatterers randomly and uniformly
-% distributed in a thin hemispherical shell 
+%
+% This code plots the PDF and PFA of the echo magnitude due to N identical
+% Rayleigh scatterers that are randomly distributed in the sensor beam.
+% 3D distribution of scatterers.
 %
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
@@ -43,26 +44,26 @@ if mc_opt
     for iN=1:length(N_all)
         Ns = N_all(iN);
         fprintf('Ns = %d\n',Ns);
-        
+
         param.N = Ns;
         param.ka = ka;
-        
+
         parfor iP = 1:pingnum
             phase = rand(1,Ns)*2*pi;
             amp = raylrnd(repmat(v_rayl,1,Ns));
             s = amp.*exp(1i*phase);
-            
+
             % position in the beam
             u = unifrnd(0,1,1,sum(Ns));
             theta = acos(u);  % polar angle wrt beam axis
             b = (2*besselj(1,ka*sin(theta))./(ka*sin(theta))).^2;
-            
+
             % E=SB
             e = s.*b;
             env(iP) = abs(sum(e));
-            
+
         end % pingnum
-        
+
         file_save = sprintf('pnum_%s_ka%2.4f_N%04d.mat',...
             pingnum_str,ka,Ns);
         save([save_path,'/',file_save],'env','param');
@@ -84,13 +85,13 @@ for iN=1:length(N_all)
     [p_x,x] = findEchoDist_kde(E.env/sqrt(mean(E.env.^2)),npt);
     switch iN
         case 1
-            loglog(x,p_x,'r-','linewidth',2);   
+            loglog(x,p_x,'r-','linewidth',2);
         case 2
-            loglog(x,p_x,'g-','linewidth',2);   
+            loglog(x,p_x,'g-','linewidth',2);
         case 3
-            loglog(x,p_x,'b-','linewidth',2);   
+            loglog(x,p_x,'b-','linewidth',2);
         case 4
-            loglog(x,p_x,'b-','linewidth',1);   
+            loglog(x,p_x,'b-','linewidth',1);
     end
 end
 % title(sprintf('ka=%2.4f, smplN=%s, with bp',...
@@ -130,13 +131,13 @@ for iN=1:length(N_all)
     pfa_x = 1-cdf_x;
     switch iN
         case 1
-            loglog(x,pfa_x,'r-','linewidth',2);   
+            loglog(x,pfa_x,'r-','linewidth',2);
         case 2
-            loglog(x,pfa_x,'g-','linewidth',2);   
+            loglog(x,pfa_x,'g-','linewidth',2);
         case 3
-            loglog(x,pfa_x,'b-','linewidth',2);   
+            loglog(x,pfa_x,'b-','linewidth',2);
         case 4
-            loglog(x,pfa_x,'b-','linewidth',1);   
+            loglog(x,pfa_x,'b-','linewidth',1);
     end
     clear E
 end

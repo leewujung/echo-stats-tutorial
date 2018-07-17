@@ -1,9 +1,11 @@
 % Code to generate Figure 15 of the echo statistics tutorial.
-% This figure shows distributions of magnitude of echo in backscatter
-% direction from N point scatterers randomly and uniformly distributed in
-% a thin hemispherical shell  
+%
+% This code plots the PDF and PFA of the echo magnitude due to N identical point scatterers
+% that are randomly distributed in the sensor beam (in 15a, the beam is omnidirectional).
+% 3D distribution of scatterers.
 %
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
+
 
 clear
 addpath './util_fcn'
@@ -36,39 +38,39 @@ if mc_opt
     for iN=1:length(N_all)
         Ns = N_all(iN);
         fprintf('Ns = %d\n',Ns);
-        
+
         param.N = Ns;
         param.ka = ka;
-        
+
         parfor iP = 1:pingnum
             phase = rand(1,Ns)*2*pi;
             amp = ones(1,Ns);
             s = amp.*exp(1i*phase);
-            
+
             % position in the beam
             u = unifrnd(0,1,1,sum(Ns));
             theta = acos(u);  % polar angle wrt beam axis
             b_bp0 = 1;
             b_bp1 = (2*besselj(1,ka*sin(theta))./(ka*sin(theta))).^2;
-            
+
             % E=SB
             e_bp0 = s.*b_bp0;
             e_bp1 = s.*b_bp1;
             env_bp0(iP) = abs(sum(e_bp0));
             env_bp1(iP) = abs(sum(e_bp1));
-            
+
         end % pingnum
-        
+
         env = env_bp0;
         file_save = sprintf('pnum_%s_ka%2.4f_N%04d_bp0.mat',...
             pingnum_str,ka,Ns);
         save([save_path,'/',file_save],'env','param');
-        
+
         env = env_bp1;
         file_save = sprintf('pnum_%s_ka%2.4f_N%04d_bp1.mat',...
             pingnum_str,ka,Ns);
         save([save_path,'/',file_save],'env','param');
-        
+
     end
 end
 
@@ -81,20 +83,20 @@ xr = logspace(-3,log10(2000),500);  % standard
 rayl = raylpdf(xr,1/sqrt(2));
 loglog(xr,rayl,'k','linewidth',2);
 hold on
-for iN=1:length(N_all)    
+for iN=1:length(N_all)
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_bp1.mat',...
         pingnum_str,ka,N_all(iN));
     E = load(fullfile(save_path,simu_file));
     [x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),1200);
     switch iN
         case 1
-            loglog(x,p_x,'r-','linewidth',2);   
+            loglog(x,p_x,'r-','linewidth',2);
         case 2
-            loglog(x,p_x,'g-','linewidth',2);   
+            loglog(x,p_x,'g-','linewidth',2);
         case 3
-            loglog(x,p_x,'b-','linewidth',2);   
+            loglog(x,p_x,'b-','linewidth',2);
         case 4
-            loglog(x,p_x,'b-','linewidth',1);   
+            loglog(x,p_x,'b-','linewidth',1);
     end
     clear E
 end
@@ -127,7 +129,7 @@ cdf_rayl = cumtrapz(xr,rayl);
 pfa_rayl = 1-cdf_rayl;
 loglog(xr,pfa_rayl,'k','linewidth',2);
 hold on
-for iN=1:length(N_all)    
+for iN=1:length(N_all)
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_bp1.mat',...
         pingnum_str,ka,N_all(iN));
     E = load(fullfile(save_path,simu_file));
@@ -136,13 +138,13 @@ for iN=1:length(N_all)
     pfa_x = 1-cdf_x;
     switch iN
         case 1
-            loglog(x,pfa_x,'r-','linewidth',2);   
+            loglog(x,pfa_x,'r-','linewidth',2);
         case 2
-            loglog(x,pfa_x,'g-','linewidth',2);   
+            loglog(x,pfa_x,'g-','linewidth',2);
         case 3
-            loglog(x,pfa_x,'b-','linewidth',2);   
+            loglog(x,pfa_x,'b-','linewidth',2);
         case 4
-            loglog(x,pfa_x,'b-','linewidth',1);   
+            loglog(x,pfa_x,'b-','linewidth',1);
     end
     clear E
 end
@@ -175,18 +177,18 @@ rayl = raylpdf(xr,1/sqrt(2));
 loglog(xr,rayl,'k','linewidth',2);
 hold on
 plot([1,1],[10e-8,1],'r-','linewidth',2);  % N=1 curve
-for iN=2:length(N_all)    
+for iN=2:length(N_all)
     simu_file = sprintf('pnum_%s_ka%2.4f_N%04d_bp0.mat',...
         pingnum_str,ka,N_all(iN));
     E = load(fullfile(save_path,simu_file));
     [x,p_x] = findEchoDist(E.env/sqrt(mean(E.env.^2)),500);
     switch iN
         case 2
-            loglog(x,p_x,'g-','linewidth',2);   
+            loglog(x,p_x,'g-','linewidth',2);
         case 3
-            loglog(x,p_x,'b-','linewidth',2);   
+            loglog(x,p_x,'b-','linewidth',2);
         case 4
-            loglog(x,p_x,'b-','linewidth',1);   
+            loglog(x,p_x,'b-','linewidth',1);
     end
     clear E
 end
@@ -211,4 +213,3 @@ save_fname = sprintf('%s_smpl%s_ka%2.4f_pdf_bp0',...
 saveas(fig,[fullfile(save_path,save_fname),'_log.fig'],'fig');
 saveSameSize(fig,'file',[fullfile(save_path,save_fname),'_log.png'],...
     'format','png');
-

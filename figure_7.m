@@ -1,5 +1,9 @@
-% This code plots the Rice PDF in normalized quantity
-% Written by BAIK, Kyungmin. 11/14/2016
+% Code to generate Figure 7 of the echo statistics tutorial
+%
+% This code plots the Rice PDF on both a lin-lin and log-log scale.
+%
+% Author:  Kyungmin Baik | kbaik@kriss.re.kr | KRISS
+
 
 clear all
 close all

@@ -1,7 +1,8 @@
 % Code to generate Figure 18 of the echo statistics tutorial.
-% This figure shows PDF of magnitude of echo from 100 identical Rayleigh
-% scatterers that are randomly and uniformly distributed in thin
-% hemispherical shell 
+%
+% This code plots the PDF of the echo magnitude due to 100 identical Rayleigh
+% scatterers that are randomly distributed in the sensor beam.
+% 3D distribution of scatterers.
 %
 % Author: Wu-Jung Lee | leewujung@gmail.com | APL-UW
 
@@ -40,28 +41,28 @@ if mc_opt
         eval(['ka = X.ka_',num2str(deg(iD)),'deg;']);
         param.N = N;
         param.ka = ka;
-        
+
         parfor iP = 1:pingnum
             phase = rand(1,N)*2*pi;
             amp = raylrnd(repmat(v_rayl,1,N));
             s = amp.*exp(1i*phase);
-            
+
             % position in the beam
             u = unifrnd(0,1,1,sum(N));
             theta = acos(u);  % polar angle wrt beam axis
             b = (2*besselj(1,ka*sin(theta))./(ka*sin(theta))).^2;
-            
+
             % E=SB
             e = s.*b;
             env(iP) = abs(sum(e));
-            
+
         end % pingnum
-        
+
         file_save = sprintf('pnum_%s_ka%2.4f_N%04d.mat',...
             pingnum_str,ka,N);
         save([save_path,'/',file_save],'env','param');
     end
-    
+
 end
 
 
@@ -83,13 +84,13 @@ for iD=1:length(deg)
     [p_x,x] = findEchoDist_kde(E.env/sqrt(mean(E.env.^2)),npt);
     switch iD
         case 1
-            loglog(x,p_x,'r-','linewidth',2);   
+            loglog(x,p_x,'r-','linewidth',2);
         case 2
-            loglog(x,p_x,'g-','linewidth',2);   
+            loglog(x,p_x,'g-','linewidth',2);
         case 3
-            loglog(x,p_x,'b-','linewidth',2);   
+            loglog(x,p_x,'b-','linewidth',2);
         case 4
-            loglog(x,p_x,'b-','linewidth',1);   
+            loglog(x,p_x,'b-','linewidth',1);
     end
     clear E
 end
@@ -114,4 +115,3 @@ save_fname = sprintf('%s_smpl%s',...
 saveas(fig,[fullfile(save_path,save_fname),'.fig'],'fig');
 saveSameSize(fig,'file',[fullfile(save_path,save_fname),'.png'],...
     'format','png');
-

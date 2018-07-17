@@ -1,4 +1,9 @@
-% This code creates 6 common PDFs in one figure in linear or log scale
+% Code to generate Figure A2 of the echo statistics tutorial
+%
+% Same as Fig. A2, except on a log-log scale.
+%
+% Author:  Kyungmin Baik | kbaik@kriss.re.kr | KRISS
+
 
 clear all
 close all

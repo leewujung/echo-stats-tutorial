@@ -1,6 +1,10 @@
-% This code plots the PDF of magnitude of signal due to sums of N simple sinusoids with identical
-% magnitude and random phases.
-% Written by BAIK, Kyungmin. 10/25/2016
+% Code to generate Figure 6 of the echo statistics tutorial
+%
+% This code plots the PDF of the magnitude of the sum of N random phase
+% sinusoids of identical amplitude. Both lin-lin and log-log scales are used.
+%
+% Author:  Kyungmin Baik | kbaik@kriss.re.kr | KRISS
+
 
 clear
 
@@ -24,8 +28,8 @@ for m=1:N
     Ampv=Ampv+Nois+Famp*exp(1i*Pha); % amplitude of each phase component, noise is added
     %%Ampr=Ampr+Famp*cos(Phar); % amplitude of each phase component
     %%Ampi=Ampi+Famp*sin(Phai); % amplitude of each phase component
-    
-    
+
+
 end
 
 %Amp=sqrt(Ampr.^2+Ampi.^2);

@@ -1,5 +1,13 @@
-% This code is for the creation of Fig. 14 in the tutorial.
-% Written by BAIK, Kyungmin. 10/18/206
+% Code to generate Figure 14 of the echo statistics tutorial
+%
+% This code plots the PDF and PFA of the echo magnitude due to various types
+% of scatterers (one at a time) randomly distributed in the sensor beam:
+% point scatterer, Rayleigh scatterer, randomly oriented smooth prolate
+% spheroid, and randomly oriented rough prolate spheroid.
+% 2D distribution of scatterers.
+%
+% Author:  Kyungmin Baik | kbaik@kriss.re.kr | KRISS
+
 
 clear all
 close all
@@ -11,9 +19,9 @@ b=logspace(-5,0,N);
 theta=[0:.001:90]*pi/180;
 PDF=zeros(size(b));
 %ka=2*pi;
-ka=44.251078712; 
+ka=44.251078712;
 
-% Beampattern PDF of a circular aperture 
+% Beampattern PDF of a circular aperture
 for m=1:length(b)-1
     x=ka*sin(theta);
     y=4*(besselj(1,x)).^2-b(m)*(x.^2);
@@ -94,7 +102,7 @@ clear PDF
 PDF=((Ep^(2/3))*fes)./(pi*Fran.*sqrt(fes-(Ep^(2/3))*Fran).*sqrt(Fran-(Ep^(4/3))*fes)); % 2D space
 
 % This is for the calculation of smooth spheroid
-PDFray=PDF; 
+PDFray=PDF;
 Fray=Fran;
 
 Fbeam=logspace(-5,0,NT);
@@ -111,7 +119,7 @@ end
 
 Nfac=sqrt(trapz(Ftotal,(Ftotal.^2).*PDFtotal)); % normalization factor for fs
 
-% PDF of smooth spheroid combined with beampattern PDF 
+% PDF of smooth spheroid combined with beampattern PDF
 figure(1)
 loglog(Ftotal/Nfac,PDFtotal/trapz(Ftotal/Nfac,PDFtotal),'g','LineWidth',2)
 
