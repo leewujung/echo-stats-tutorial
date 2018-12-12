@@ -2,7 +2,12 @@
 
 ## Brief introduction
 
-This is a compilation of code used for generating figures in the paper: **Echo statistics associated with discrete scatterers: A tutorial on physics-based methods**. The authors of this paper are [Timothy K. Stanton](https://www.whoi.edu/profile/tstanton/) ([@timstanton99](https://github.com/timstanton99)), [Wu-Jung Lee](https://leewujung.github.io/) ([@leewujung](https://github.com/leewujung)), and [Kyungmin Baik](mailto:kbaik@kriss.re.kr) ([@nupho27](https://github.com/nupho27)). @leewujung and @nupho27 jointly contribute to this repository. The paper is re-submitted to the Journal of the Acoustical Society of America (JASA) after the first round of review and a PDF copy will be uploaded here once accepted.
+This is a compilation of code used for generating figures in the following tutorial:
+
+Stanton TK, Lee W-J, Baik K. (2018). Echo statistics associated with discrete scatterers: A tutorial on physics-based methods. *The Journal of the Acoustical Society of America*, 144(6): 3124–3171. [https://doi.org/10.1121/1.5052255](https://doi.org/10.1121/1.5052255).
+
+[Wu-Jung Lee](https://leewujung.github.io/) ([@leewujung](https://github.com/leewujung)) and [Kyungmin Baik](mailto:kbaik@kriss.re.kr) ([@nupho27](https://github.com/nupho27)) jointly contributed to this repository. The code here are subject to future revisions while a *frozen* version of the code at the time of publication is available as [supplementary materials](https://asa.scitation.org/doi/suppl/10.1121/1.5052255) at the JASA website.
+
 
 ## To use the code
 
