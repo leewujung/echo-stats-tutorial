@@ -21,9 +21,9 @@ You can get a copy of the code in the following ways:
 
     If you forgot to use this option, run `git submodule init` to initialize your local configuration file, and `git submodule update` to check out the appropriate submodule commit.
 
-2. Download the whole repo as a zip file using the "Clone or download" button on the top-right corner of this page
+2. Download the whole repo as a zip file using the "Clone or download" button on the top-right corner of this page.
 
-  Note that the folder `broadband-echo-stats` will be empty after you unzip. This is because the folder was a git submodule linked to [a separate repo](https://github.com/leewujung/broadband-echo-stats). You can download the content of this folder [via this link](https://github.com/leewujung/broadband-echo-stats/archive/master.zip) and put everything under folder `broadband-echo-stats`. (As you can see, using the `git submodule` utility in 1. below is much more straightforward.)
+    Note that the folder `broadband-echo-stats` will be empty after you unzip. This is because the folder was a git submodule linked to [a separate repo](https://github.com/leewujung/broadband-echo-stats). You can download the content of this folder [via this link](https://github.com/leewujung/broadband-echo-stats/archive/master.zip) and put everything under folder `broadband-echo-stats`. (As you can see, using the `git submodule` utility in 1. below is much more straightforward.)
 
 ### A few notes
 1. The code are tested with Matlab R2017b and use functions in the Signal Processing Toolbox ver7.5 and Parallel Computing Toolbox ver 6.11.
